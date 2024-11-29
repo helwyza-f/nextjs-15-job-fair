@@ -1,0 +1,37 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Job {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String
+  title             String
+  description       String?
+  short_description String?
+  imageUrl          String?
+  isPublished       Boolean  @default(false)
+  tags              String[] @default([])  // Simpan tags sebagai JSON string
+  savedUsers        String[]  // Simpan savedUsers sebagai JSON string
+  shiftTiming       String?
+  hourlyRate        String?
+  yearsOfExperience String?
+  workMode          String?
+  categoryId        String?  @db.ObjectId
+  category          Category? @relation(fields: [categoryId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  @@index([categoryId])
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  jobs      Job[]    @relation
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
