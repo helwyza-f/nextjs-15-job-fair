@@ -50,7 +50,7 @@ export default async function JobsPage() {
         </Link>
       </div>
 
-      {/* Table Jobs */}
+      {/* Table Job */}
       <div className="mt-8">
         <DataTable columns={columns} data={data} />
       </div>
