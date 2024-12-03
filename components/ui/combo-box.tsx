@@ -67,7 +67,7 @@ export default function ComboBox({
             <Search className="h-4 w-4 mr-2 min-w-4" />
             <input
               type="text"
-              placeholder="Search category..."
+              placeholder="Search..."
               className="flex-1 w-full outline-none text-sm py-1"
               onChange={handleSearchTerm}
             />

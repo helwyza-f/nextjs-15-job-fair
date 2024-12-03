@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ interface JobTagsFormProps {
 }
 
 const formSchema = z.object({
-  tags: z.array(z.string()).min(1),
+  tags: z.array(z.string()).min(1, { message: "At least one tag is required" }),
 });
 
 export default function JobTagsForm({ initialData, jobId }: JobTagsFormProps) {
@@ -25,19 +25,29 @@ export default function JobTagsForm({ initialData, jobId }: JobTagsFormProps) {
   const [isPrompting, setIsPrompting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
-  const [jobTags, setJobTags] = useState<string[]>(initialData.tags || []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { tags: initialData.tags || [] },
   });
 
-  const { setValue } = form;
+  // Synchronize local state with form state
+  const { setValue, watch } = form;
+  const watchedTags = watch("tags");
+  const [jobTags, setJobTags] = useState<string[]>(watchedTags || []);
+
+  // Update form value when jobTags changes
+  useEffect(() => {
+    setValue("tags", jobTags, {
+      shouldValidate: true,
+    });
+  }, [jobTags, setValue]);
+
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async () => {
     try {
-      const payload = { tags: jobTags }; // Simpan array langsung ke database
+      const payload = { tags: jobTags };
       await axios.patch(`/api/jobs/${jobId}`, payload);
       toast.success("Tags updated.");
       toogleEditing();
@@ -49,7 +59,8 @@ export default function JobTagsForm({ initialData, jobId }: JobTagsFormProps) {
   };
 
   const removeTag = (tagToRemove: string) => {
-    setJobTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+    const updatedTags = jobTags.filter((tag) => tag !== tagToRemove);
+    setJobTags(updatedTags);
   };
 
   const toogleEditing = () => setIsEditing((current) => !current);
@@ -60,20 +71,18 @@ export default function JobTagsForm({ initialData, jobId }: JobTagsFormProps) {
       const job_tags = `Generate an array of top 10 keywords related to the job profession "${prompt}". These keywords should encompass various aspects of the profession, including skills, responsibilities, tools, and technologies commonly associated with it. Aim for a diverse set of keywords that accurately represent the breadth of the profession. Your output should be a list/array of keywords. Just return me the array alone.`;
 
       const response = await GeneratePrompt(job_tags);
-      // console.log(response);
       const cleanedResponse = response
         .replace(/^javascript\s*/, "")
         .replace(/^json\s*/, "");
-      // console.log(cleanedResponse);
 
       const parsedResponse = JSON.parse(cleanedResponse);
 
       if (Array.isArray(parsedResponse)) {
-        console.log("Setting jobTags:", parsedResponse);
-        setJobTags((prevTags) => [...prevTags, ...parsedResponse]);
-        setValue("tags", [...jobTags, ...parsedResponse]);
+        // Filter out duplicates
+        const newTags = parsedResponse.filter((tag) => !jobTags.includes(tag));
+
+        setJobTags((prevTags) => [...prevTags, ...newTags]);
       } else {
-        console.log("not array");
         toast.error("Something went wrong.");
       }
       setIsPrompting(false);
@@ -87,8 +96,7 @@ export default function JobTagsForm({ initialData, jobId }: JobTagsFormProps) {
   };
 
   const handleReset = () => {
-    setJobTags([]); // Reset ke nilai awal
-    setValue("tags", []);
+    setJobTags([]);
   };
 
   return (

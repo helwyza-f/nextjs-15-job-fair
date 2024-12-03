@@ -1,13 +1,12 @@
 "use client";
-
+import Sort from "./sort";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { EditIcon, MoreHorizontal, Trash2 } from "lucide-react";
+import { EditIcon, Eye, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -28,20 +27,40 @@ export type JobsColumns = {
 export const columns: ColumnDef<JobsColumns>[] = [
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+            Title
+          </h2>
+          <Sort
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "isPublished",
-    header: () => (
-      <div className="text-center font-medium text-base">Status</div>
-    ),
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+            Status
+          </h2>
+          <Sort
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          />
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const { isPublished } = row.original;
 
       return (
         <div
           className={cn(
-            "border px-2 py-1 text-md text-black flex justify-center mx-auto rounded-md w-1/2",
+            "border px-2 py-1 text-md text-black flex justify-center  rounded-md w-1/2",
             isPublished
               ? "border-emerald-500 bg-emerald-100/80"
               : "bg-red-100/80"
@@ -54,15 +73,48 @@ export const columns: ColumnDef<JobsColumns>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+            Category
+          </h2>
+          <Sort
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "company",
-    header: "Company",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+            Company
+          </h2>
+          <Sort
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
-    header: "Date",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+            Date
+          </h2>
+          <Sort
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          />
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -82,6 +134,12 @@ export const columns: ColumnDef<JobsColumns>[] = [
               <DropdownMenuItem>
                 <span>Edit</span>
                 <EditIcon className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/admin/jobs/${job.id}/applicants`}>
+              <DropdownMenuItem>
+                <span>Applicants</span>
+                <Eye className="mr-2 h-4 w-4" />
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

@@ -7,6 +7,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Sidebar from "./sidebar";
 
 export default function MobileSidebar() {
@@ -16,6 +17,12 @@ export default function MobileSidebar() {
         <Menu />
       </SheetTrigger>
       <SheetContent className="bg-white p-0" side={"left"}>
+        <SheetHeader>
+          <VisuallyHidden>
+            <SheetTitle>Menu Sidebar</SheetTitle>
+          </VisuallyHidden>
+          {/* <SheetDescription>Akses menu utama aplikasi</SheetDescription> */}
+        </SheetHeader>
         <Sidebar />
       </SheetContent>
     </Sheet>

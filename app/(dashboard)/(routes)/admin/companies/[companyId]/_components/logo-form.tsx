@@ -17,26 +17,26 @@ import ImageUpload from "@/components/image-upload";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Job } from "@prisma/client";
+import { Company, Job } from "@prisma/client";
 import Image from "next/image";
 
-interface ImageFormProps {
-  initialData: Job;
-  jobId: string;
+interface LogoFormProps {
+  initialData: Company;
+  companyId: string;
 }
 
 const formSchema = z.object({
-  imageUrl: z.string(),
+  logoUrl: z.string(),
 });
 
-export default function ImageForm({ initialData, jobId }: ImageFormProps) {
+export default function LogoForm({ initialData, companyId }: LogoFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      imageUrl: initialData?.imageUrl || "",
+      logoUrl: initialData?.logoUrl || "",
     },
   });
 
@@ -44,10 +44,10 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/jobs/${jobId}`, values);
-      // toast.success("imageUrl updated.");
+      const response = await axios.patch(`/api/companies/${companyId}`, values);
       toogleEditing();
       router.refresh();
+      toast.success("logoUrl updated.");
     } catch (error) {
       toast.error("Something went wrong.");
     }
@@ -58,7 +58,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
   return (
     <div className="mt-6 border bg-neutral-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">Job Cover Image</h2>
+        <h2 className="font-bold text-lg text-neutral-700">Company Logo</h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
           {isEditing ? (
             <>Cancel</>
@@ -71,9 +71,9 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
         </Button>
       </div>
 
-      {/* display the imageUrl when not editing */}
+      {/* display the logoUrl when not editing */}
       {!isEditing &&
-        (!initialData.imageUrl ? (
+        (!initialData.logoUrl ? (
           <div className="flex items-center justify-center h-60 bg-neutral-200 rounded-md">
             <ImageIcon className="h-10 w-10 text-neutral-500" />
           </div>
@@ -83,7 +83,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
               alt="cover image"
               fill
               className="w-full h-full object-cover rounded-md "
-              src={initialData.imageUrl}
+              src={initialData.logoUrl}
               sizes="100%"
             />
           </div>
@@ -98,7 +98,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
           >
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="logoUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -106,7 +106,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
                       value={field.value} // Nilai dari formulir
                       onChange={(url) => field.onChange(url)} // Fungsi untuk memperbarui nilai formulir
                       onRemove={() => field.onChange("")} // Reset nilai formulir saat dihapus
-                      folder="job"
+                      folder="company/logos"
                     />
                   </FormControl>
                   <FormMessage />

@@ -11,6 +11,7 @@ interface ImageUploadProps {
   onChange: (value: string) => void;
   onRemove: (value: string) => void;
   value: string;
+  folder: string;
 }
 
 export default function ImageUpload({
@@ -18,6 +19,7 @@ export default function ImageUpload({
   onChange,
   onRemove,
   value,
+  folder,
 }: ImageUploadProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +39,7 @@ export default function ImageUpload({
     setIsLoading(true);
 
     try {
-      const filePath = `uploads/${file.name}`;
+      const filePath = `${folder}/${file.name}`;
 
       const { data, error } = await supabase.storage
         .from("job-fair")

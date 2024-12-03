@@ -1,6 +1,12 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { ArrowLeft, LayoutDashboard, ListChecks } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Banner from "@/components/banner";
@@ -17,6 +23,7 @@ import JobExperience from "./_components/job-experience";
 import JobDescriptionForm from "./_components/job-description";
 import JobTagsForm from "./_components/job-tags";
 import { ObjectId } from "bson";
+import CompanyForm from "./_components/company-form";
 
 export default async function JobsDetailsPage({
   params,
@@ -44,6 +51,15 @@ export default async function JobsDetailsPage({
   if (!job) return redirect("/admin/jobs");
   // console.log(job);
   const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
+
+  const companies = await db.company.findMany({
+    where: {
+      userId: userId,
+    },
     orderBy: {
       name: "asc",
     },
@@ -145,13 +161,40 @@ export default async function JobsDetailsPage({
 
           {/* right side */}
           <div className="flex-1 space-y-6">
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={ListChecks} />
-              <h2 className="text-xl text-neutral-800">Job Requirements </h2>
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={ListChecks} />
+                <h2 className="text-xl text-neutral-800">Job Requirements </h2>
+              </div>
+
+              {/* Job Tags */}
+              <JobTagsForm initialData={job} jobId={jobId} />
             </div>
 
-            {/* Job Tags */}
-            <JobTagsForm initialData={job} jobId={jobId} />
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={Building2} />
+                <h2 className="text-xl text-neutral-800">Company Details </h2>
+              </div>
+
+              {/* company */}
+              <CompanyForm
+                initialData={job}
+                jobId={jobId}
+                options={companies.map((company) => ({
+                  label: company.name,
+                  value: company.id.toString(),
+                }))}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={File} />
+                <h2 className="text-xl text-neutral-800">
+                  Files & Attachment{" "}
+                </h2>
+              </div>
+            </div>
           </div>
         </div>
 

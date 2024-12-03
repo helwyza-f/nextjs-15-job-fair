@@ -20,6 +20,7 @@ export default async function JobsPage() {
       },
       include: {
         category: true,
+        company: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -31,7 +32,7 @@ export default async function JobsPage() {
       title: job.title,
       isPublished: job.isPublished,
       category: job.category?.name ?? "Not Avaliable",
-      company: "Not Avaliable",
+      company: job.company?.name ?? "Not Avaliable",
       createdAt: format(job.createdAt, "dd MMM yyyy"),
     }));
     return data;

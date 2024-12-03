@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { intersection, z } from "zod";
-import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -13,30 +13,34 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import ImageUpload from "@/components/image-upload";
-import { Input } from "@/components/ui/input";
+import ComboBox from "@/components/ui/combo-box";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Job } from "@prisma/client";
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 
-interface ImageFormProps {
+interface CompanyFormProps {
   initialData: Job;
   jobId: string;
+  options: { label: string; value: string }[];
 }
 
 const formSchema = z.object({
-  imageUrl: z.string(),
+  companyId: z.string().min(1),
 });
 
-export default function ImageForm({ initialData, jobId }: ImageFormProps) {
+export default function CompanyForm({
+  initialData,
+  jobId,
+  options,
+}: CompanyFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      imageUrl: initialData?.imageUrl || "",
+      companyId: initialData.companyId?.toString() || "",
     },
   });
 
@@ -45,7 +49,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.patch(`/api/jobs/${jobId}`, values);
-      // toast.success("imageUrl updated.");
+      toast.success("Category updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
@@ -55,10 +59,14 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
 
   const toogleEditing = () => setIsEditing((current) => !current);
 
+  const selectedOption = options.find(
+    (option) => option.value === initialData.companyId?.toString()
+  );
+
   return (
     <div className="mt-6 border bg-neutral-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">Job Cover Image</h2>
+        <h2 className="font-bold text-lg text-neutral-700">Job created by</h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
           {isEditing ? (
             <>Cancel</>
@@ -71,23 +79,17 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
         </Button>
       </div>
 
-      {/* display the imageUrl when not editing */}
-      {!isEditing &&
-        (!initialData.imageUrl ? (
-          <div className="flex items-center justify-center h-60 bg-neutral-200 rounded-md">
-            <ImageIcon className="h-10 w-10 text-neutral-500" />
-          </div>
-        ) : (
-          <div className="relative w-full h-60 aspect-video mt-2">
-            <Image
-              alt="cover image"
-              fill
-              className="w-full h-full object-cover rounded-md "
-              src={initialData.imageUrl}
-              sizes="100%"
-            />
-          </div>
-        ))}
+      {/* display the title when not editing */}
+      {!isEditing && (
+        <p
+          className={cn(
+            "text-md mt-2",
+            !initialData.companyId && "text-neutral-500 italic"
+          )}
+        >
+          {selectedOption?.label || "Not selected yet"}
+        </p>
+      )}
 
       {/* display the form when editing */}
       {isEditing && (
@@ -98,22 +100,20 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
           >
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="companyId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <ImageUpload
-                      value={field.value} // Nilai dari formulir
-                      onChange={(url) => field.onChange(url)} // Fungsi untuk memperbarui nilai formulir
-                      onRemove={() => field.onChange("")} // Reset nilai formulir saat dihapus
-                      folder="job"
+                    <ComboBox
+                      heading="Select you company"
+                      options={options}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <div className="flex items-center gap-x-2">
               <Button disabled={!isValid || isSubmitting} type="submit">
                 Save
