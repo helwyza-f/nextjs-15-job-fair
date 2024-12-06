@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Job } from "@prisma/client";
 import Image from "next/image";
+import { DevTool } from "@hookform/devtools";
 
 interface ImageFormProps {
   initialData: Job;
@@ -38,9 +39,12 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
     defaultValues: {
       imageUrl: initialData?.imageUrl || "",
     },
+    values: {
+      imageUrl: initialData?.imageUrl || "",
+    },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting, isValid, isLoading } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -91,36 +95,39 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
 
       {/* display the form when editing */}
       {isEditing && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <ImageUpload
-                      value={field.value} // Nilai dari formulir
-                      onChange={(url) => field.onChange(url)} // Fungsi untuk memperbarui nilai formulir
-                      onRemove={() => field.onChange("")} // Reset nilai formulir saat dihapus
-                      folder="job"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 mt-4"
+            >
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value} // Nilai dari formulir
+                        onChange={(url) => field.onChange(url)} // Fungsi untuk memperbarui nilai formulir
+                        onRemove={() => field.onChange("")} // Reset nilai formulir saat dihapus
+                        folder="job"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
+              <div className="flex items-center gap-x-2">
+                <Button disabled={!isValid || isSubmitting} type="submit">
+                  Save
+                </Button>
+              </div>
+            </form>
+          </Form>
+          <DevTool control={form.control} />
+        </>
       )}
     </div>
   );

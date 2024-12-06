@@ -24,6 +24,7 @@ import JobDescriptionForm from "./_components/job-description";
 import JobTagsForm from "./_components/job-tags";
 import { ObjectId } from "bson";
 import CompanyForm from "./_components/company-form";
+import FilesForm from "./_components/files-form";
 
 export default async function JobsDetailsPage({
   params,
@@ -194,6 +195,8 @@ export default async function JobsDetailsPage({
                   Files & Attachment{" "}
                 </h2>
               </div>
+              {/* files */}
+              <FilesForm initialData={job} jobId={jobId} bucket="job-fair" />
             </div>
           </div>
         </div>

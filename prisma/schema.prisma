@@ -15,8 +15,8 @@ model Job {
   short_description String?
   imageUrl          String?
   isPublished       Boolean   @default(false)
-  tags              String[]  @default([]) // Simpan tags sebagai JSON string
-  savedUsers        String[] // Simpan savedUsers sebagai JSON string
+  tags              String[]  @default([])
+  savedUsers        String[]  @default([])
   shiftTiming       String?
   hourlyRate        String?
   yearsOfExperience String?
@@ -25,7 +25,7 @@ model Job {
   category          Category? @relation(fields: [categoryId], references: [id])
   companyId         String?   @db.ObjectId
   company           Company?  @relation(fields: [companyId], references: [id])
-  attachments       Json? // Array of objects containing { url, name }
+  attachments       Json?     @default("[]") // Tambahkan properti ini
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -49,7 +49,7 @@ model Company {
   state          String?
   zip_code       String?
   jobs           Job[]
-  followers      String[] @default([]) // Simpan followers sebagai JSON string
+  followers      String[] @default([]) // Array of followers
   overview       String?
   whyJoinUs      String?
   createdAt      DateTime @default(now())
