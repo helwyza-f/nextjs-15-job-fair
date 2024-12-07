@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -78,18 +79,32 @@ export const DELETE = async (
         userId,
       },
     });
-    console.log(job);
+    // console.log(job);
     if (!job) {
       return NextResponse.json({ message: "Job not found" }, { status: 404 });
     }
 
+    if (job.imageUrl) {
+      const filePath = job.imageUrl.split(
+        "/storage/v1/object/public/job-fair/"
+      )[1];
+      await supabase.storage.from("job-fair").remove([filePath]);
+    }
+    if (Array.isArray(job.attachments) && job.attachments.length > 0) {
+      const fileUrls = job.attachments.map(
+        (attachment: any) =>
+          attachment.url.split("/storage/v1/object/public/job-fair/")[1]
+      );
+      await supabase.storage.from("job-fair").remove(fileUrls);
+    }
+
     // Simulasi penghapusan dari database
-    // await db.job.delete({
-    //   where: {
-    //     id: jobId,
-    //     userId,
-    //   },
-    // });
+    await db.job.delete({
+      where: {
+        id: jobId,
+        userId,
+      },
+    });
 
     return NextResponse.json(
       { message: "Job deleted successfully" },

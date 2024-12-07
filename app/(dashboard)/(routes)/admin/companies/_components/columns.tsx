@@ -86,7 +86,7 @@ export const columns: ColumnDef<CompaniesColumns>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/admin/companies/${company.id}`}>
+            <Link href={`/admin/companies/${company.id}`} scroll={false}>
               <DropdownMenuItem>
                 <span>Edit</span>
                 <EditIcon className="mr-2 h-4 w-4" />

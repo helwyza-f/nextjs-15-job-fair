@@ -15,7 +15,7 @@ export default function NavbarRoutes() {
     <>
       <div className="flex gap-x-4 ml-auto">
         {isAdminPage || isUserPage ? (
-          <Link href="/">
+          <Link href="/" scroll={false}>
             <Button
               variant={"outline"}
               size={"sm"}

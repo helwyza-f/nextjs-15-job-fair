@@ -41,7 +41,7 @@ export default function JobCreatePage() {
       const response = await axios.post("/api/jobs", values);
       // console.log(response);
       console.log("Navigating to:", `/admin/jobs/${response.data.id}`);
-      router.push(`/admin/jobs/${response.data.id}`);
+      router.push(`/admin/jobs/${response.data.id}`, { scroll: false });
       toast.success("Job created successfully");
     } catch (error) {
       console.log((error as Error)?.message);
@@ -84,7 +84,7 @@ export default function JobCreatePage() {
               )}
             />
             <div className="flex items-center gap-x-2">
-              <Link href="/admin/jobs">
+              <Link href="/admin/jobs" scroll={false}>
                 <Button type="button" variant={"ghost"}>
                   Cancel
                 </Button>

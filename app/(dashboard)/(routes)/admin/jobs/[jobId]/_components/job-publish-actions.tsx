@@ -28,7 +28,7 @@ export default function JobPublishActions({
         isPublished: !isPublished,
       });
       toast.success("Job status updated successfully!");
-      router.push("/admin/jobs");
+      router.push("/admin/jobs", { scroll: false });
     } catch (error) {
       console.error(error);
       toast.error("Failed to update job status. Please try again.");
@@ -43,7 +43,7 @@ export default function JobPublishActions({
       const response = await axios.delete(`/api/jobs/${jobId}`);
       toast.success(response.data.message);
 
-      router.push("/admin/jobs");
+      router.push("/admin/jobs", { scroll: false });
     } catch (error: any) {
       console.error(error);
       toast.error(
