@@ -50,7 +50,7 @@ export default async function JobsDetailsPage({
   });
 
   if (!job) return redirect("/admin/jobs");
-  // console.log(job);
+
   const categories = await db.category.findMany({
     orderBy: {
       name: "asc",
@@ -65,16 +65,22 @@ export default async function JobsDetailsPage({
       name: "asc",
     },
   });
+  const attachment =
+    Array.isArray(job.attachments) && job.attachments.length > 0;
 
   const requiredFields = [
     job.title,
-    job.description,
-    job.imageUrl,
     job.categoryId,
+    job.imageUrl,
     job.short_description,
     job.shiftTiming,
     job.hourlyRate,
     job.workMode,
+    job.yearsOfExperience,
+    job.description,
+    job.tags,
+    job.companyId,
+    attachment,
   ];
 
   const totalFields = requiredFields.length;
@@ -85,7 +91,7 @@ export default async function JobsDetailsPage({
 
   return (
     <div className="p-6 mt-20 md:mt-0">
-      <Link href={"/admin/jobs"}>
+      <Link href={"/admin/jobs"} scroll={false}>
         <div className="flex items-center gap-x-2 text-sm text-neutral-500">
           <ArrowLeft className="w-4 h-4" />
           Back

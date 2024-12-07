@@ -17,12 +17,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { DevTool } from "@hookform/devtools";
+
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { JsonValue } from "@prisma/client/runtime/library";
-import { Input } from "@/components/ui/input";
 
 interface UploadedFile {
   name: string;
@@ -87,7 +85,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         const uniqueFileName = `${Date.now()}_${file.name}`;
         const { data, error } = await supabase.storage
           .from(bucket)
-          .upload(`uploads/${uniqueFileName}`, file);
+          .upload(`job/attachments/${uniqueFileName}`, file);
 
         if (error) {
           console.log(error.message);
@@ -104,7 +102,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         // Dapatkan URL file yang diunggah
         const { data: publicUrlData } = supabase.storage
           .from(bucket)
-          .getPublicUrl(`uploads/${uniqueFileName}`);
+          .getPublicUrl(`job/attachments/${uniqueFileName}`);
 
         // Tambahkan file yang berhasil diunggah ke daftar lokal
         const newFileEntry = {
@@ -124,8 +122,9 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   };
 
   const handleDeleteFile = async (fileUrl: string) => {
+    // console.log(fileUrl);
     try {
-      const filePath = fileUrl.split("/storage/v1/object/public/")[1];
+      const filePath = fileUrl.split("/storage/v1/object/public/job-fair/")[1];
       if (!filePath) throw new Error("Invalid file URL");
 
       const { error } = await supabase.storage.from(bucket).remove([filePath]);
@@ -149,7 +148,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const data = {
-        ...values,
+        // ...values,
         attachments: values.attachments ?? [],
       };
       await axios.patch(`/api/jobs/${jobId}`, data);
@@ -240,7 +239,6 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
                                 <p>Upload a File</p>
                               </div>
                               <input
-                                ref={fileInputRef}
                                 type="file"
                                 onChange={handleFileChange}
                                 className="hidden"
@@ -254,10 +252,10 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
                 }}
               />
 
-              {/* Render daftar file dari getValues */}
+              {/* Render daftar file dari useWatch */}
               <div className="mt-4">
                 {values && values.length > 0 ? (
-                  values.map((file: UploadedFile, index) => (
+                  values.map((file: { name: string; url: string }, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-start bg-gray-100 rounded-md px-2 "
@@ -293,7 +291,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
               </div>
             </form>
           </Form>
-          <DevTool control={control} />
+          {/* <DevTool control={control} /> */}
         </>
       )}
     </div>

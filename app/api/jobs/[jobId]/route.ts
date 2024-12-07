@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: { jobId: string } }
+  { params }: { params: Promise<{ jobId: string }> }
 ) => {
   try {
     const { userId } = await auth();
@@ -20,7 +20,7 @@ export const PATCH = async (
     }
 
     const data = await req.json();
-
+    // console.log(data);
     // Validasi dan proses attachments jika ada
     if (data.attachments) {
       if (!Array.isArray(data.attachments)) {
@@ -50,5 +50,56 @@ export const PATCH = async (
   } catch (error: any) {
     console.error(`JOB PATCH ERROR: ${error.message || error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
+  }
+};
+
+export const DELETE = async (
+  _req: Request,
+  { params }: { params: Promise<{ jobId: string }> }
+) => {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { jobId } = await params;
+
+    if (!jobId) {
+      return NextResponse.json(
+        { message: "Job ID is required" },
+        { status: 400 }
+      );
+    }
+    const job = await db.job.findUnique({
+      where: {
+        id: jobId,
+        userId,
+      },
+    });
+    console.log(job);
+    if (!job) {
+      return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+
+    // Simulasi penghapusan dari database
+    // await db.job.delete({
+    //   where: {
+    //     id: jobId,
+    //     userId,
+    //   },
+    // });
+
+    return NextResponse.json(
+      { message: "Job deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error(`JOB DELETE ERROR: ${error.message || error}`);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 };

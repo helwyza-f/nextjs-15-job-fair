@@ -103,6 +103,7 @@ export default function ImageUpload({
           <div className="w-full h-60 aspect-video flex items-center justify-center relative rounded-md overflow-hidden">
             <Image
               fill
+              sizes="100%"
               className="h-full w-full object-cover"
               alt="Image"
               src={value}

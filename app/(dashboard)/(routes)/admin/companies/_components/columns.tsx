@@ -32,6 +32,7 @@ export const columns: ColumnDef<CompaniesColumns>[] = [
           <Image
             src={logoUrl || logoPath}
             fill
+            sizes="100%"
             // width={20}
             // height={20}
             alt="Company Logo"

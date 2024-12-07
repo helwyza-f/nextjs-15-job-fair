@@ -1,6 +1,8 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 interface SidebarRouteItemsProps {
@@ -22,13 +24,10 @@ export default function SidebarRouteItems({
     pathname === href ||
     pathname.startsWith(`${href}/`);
 
-  const onClick = () => {
-    router.push(href);
-  };
-
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
+      scroll={false}
       className={cn(
         "flex items-center gap-x-2 py-2 text-neutral-500 text-sm font-medium pl-6 transition-all hover:text-neutral-600 hover:bg-neutral-300/50",
         isActive &&
@@ -49,6 +48,6 @@ export default function SidebarRouteItems({
           isActive && "opacity-100"
         )}
       ></div>
-    </button>
+    </Link>
   );
 }

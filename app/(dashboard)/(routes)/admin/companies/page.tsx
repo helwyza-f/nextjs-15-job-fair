@@ -32,7 +32,7 @@ export default async function CompaniesPage() {
   return (
     <div className="p-8 pt-28 md:pt-10 ">
       <div className="flex items-end justify-end">
-        <Link href={"/admin/companies/create"}>
+        <Link href={"/admin/companies/create"} scroll={false}>
           <Button variant={"default"}>
             <Plus className="h-5 w-5 " />
             New Company

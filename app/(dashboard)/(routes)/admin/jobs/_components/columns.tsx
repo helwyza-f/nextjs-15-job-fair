@@ -130,7 +130,7 @@ export const columns: ColumnDef<JobsColumns>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/admin/jobs/${job.id}`}>
+            <Link href={`/admin/jobs/${job.id}`} scroll={false}>
               <DropdownMenuItem>
                 <span>Edit</span>
                 <EditIcon className="mr-2 h-4 w-4" />

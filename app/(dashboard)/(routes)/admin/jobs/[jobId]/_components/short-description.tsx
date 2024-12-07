@@ -49,7 +49,7 @@ export default function ShortDescriptionForm({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.patch(`/api/jobs/${jobId}`, values);
-      toast.success("Category updated.");
+      toast.success("Short Description updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
@@ -65,8 +65,8 @@ export default function ShortDescriptionForm({
       const job_short_description = `Could you craft a concise job description for a ${prompt} position in fewer than 600 characters?`;
 
       const response = await GeneratePrompt(job_short_description);
-      form.setValue("short_description", response);
       setIsPrompting(false);
+      form.setValue("short_description", response);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong.");

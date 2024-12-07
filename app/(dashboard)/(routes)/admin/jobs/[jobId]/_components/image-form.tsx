@@ -27,7 +27,7 @@ interface ImageFormProps {
 }
 
 const formSchema = z.object({
-  imageUrl: z.string(),
+  imageUrl: z.string().min(1),
 });
 
 export default function ImageForm({ initialData, jobId }: ImageFormProps) {
@@ -111,7 +111,7 @@ export default function ImageForm({ initialData, jobId }: ImageFormProps) {
                         value={field.value} // Nilai dari formulir
                         onChange={(url) => field.onChange(url)} // Fungsi untuk memperbarui nilai formulir
                         onRemove={() => field.onChange("")} // Reset nilai formulir saat dihapus
-                        folder="job"
+                        folder="job/cover"
                       />
                     </FormControl>
                     <FormMessage />

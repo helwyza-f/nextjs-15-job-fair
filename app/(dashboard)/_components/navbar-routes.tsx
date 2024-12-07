@@ -26,7 +26,7 @@ export default function NavbarRoutes() {
             </Button>
           </Link>
         ) : (
-          <Link href="/admin/jobs">
+          <Link href="/admin/jobs" scroll={false}>
             <Button
               variant={"outline"}
               size={"sm"}
