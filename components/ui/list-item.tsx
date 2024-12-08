@@ -16,7 +16,7 @@ export default function ListItem({
 }: ListItemProps) {
   return (
     <div
-      className="flex items-center px-2 py-1 cursor-pointer"
+      className="flex items-center px-2 py-2 cursor-pointer hover:bg-purple-300"
       onClick={() => onSelect(category)}
     >
       <Check

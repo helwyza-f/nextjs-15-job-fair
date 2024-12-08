@@ -54,7 +54,7 @@ export default function JobDescriptionForm({
     // return console.log(values.description);
     try {
       const response = await axios.patch(`/api/jobs/${jobId}`, values);
-      toast.success("Category updated.");
+      toast.success("Description updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
@@ -73,6 +73,7 @@ export default function JobDescriptionForm({
       const cleanResponse = response.replace(/^'|'$/g, "");
       const finalResponse = cleanResponse.replace(/[\*\#]/g, "");
       setAiValue(finalResponse);
+      form.setValue("description", "Copy & paste the result here");
       setIsPrompting(false);
     } catch (error) {
       console.log(error);
