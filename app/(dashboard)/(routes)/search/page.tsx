@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import CategoryList from "./_components/categories-list";
 import CategoriesList from "./_components/categories-list";
+import PageContent from "./_components/page-content";
 
 interface SearchPageProps {
   searchParams: {
@@ -24,9 +25,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       name: "asc", // Perbaikan: menggunakan `orderBy` untuk pengurutan
     },
   });
-
+  const { userId } = await auth();
   const jobs = await getJobs({ ...resolvedSearchParams });
-
+  // console.log(jobs);
   return (
     <>
       <div className="px-6 pt-6 mt-20 block md:hidden md:mb-0 ">
@@ -36,6 +37,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="p-5">
         {/* categories */}
         <CategoriesList categories={categories} />
+
+        {/* page content */}
+        <PageContent jobs={jobs} userId={userId} />
       </div>
     </>
   );

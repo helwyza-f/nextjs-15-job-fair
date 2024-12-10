@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Job } from "@prisma/client";
 
-type GetJobsParams = {
+export type GetJobsParams = {
   title?: string;
   categoryId?: string;
   updatedAtFilter?: string;
