@@ -17,8 +17,8 @@ interface SearchPageProps {
   };
 }
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const resolvedSearchParams = await searchParams; // Pastikan properti ini telah di-resolve
+export default async function SearchPage(props: SearchPageProps) {
+  const resolvedSearchParams = await props.searchParams; // Pastikan properti ini telah di-resolve
 
   const categories = await db.category.findMany({
     orderBy: {
@@ -26,9 +26,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     },
   });
   const { userId } = await auth();
+  // console.log("resolvedSearchParams", resolvedSearchParams);
   const jobs = await getJobs({ ...resolvedSearchParams });
-  // console.log(resolvedSearchParams);
-  // console.log(jobs.length);
+
   return (
     <>
       <div className="px-6 pt-6 mt-20 block md:hidden md:mb-0 ">

@@ -36,6 +36,26 @@ interface JobCardItemProps {
   job: Job;
   userId: string | null;
 }
+
+const experienceData = [
+  {
+    value: "0",
+    label: "Fresher",
+  },
+  {
+    value: "2",
+    label: "0-2 years",
+  },
+  {
+    value: "3",
+    label: "2-4 years",
+  },
+  {
+    value: "5",
+    label: "5+ years",
+  },
+];
+
 export default function JobCardItem({ job, userId }: JobCardItemProps) {
   const typeJob = job as Job & {
     company: Company | null;
@@ -63,6 +83,13 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
     } finally {
       setIsBookmarkLoading(false);
     }
+  };
+
+  const getExperienceLabel = (experience: string) => {
+    const selectedOption = experienceData.find(
+      (option) => option.value === experience
+    );
+    return selectedOption ? selectedOption.label : "N/A";
   };
   return (
     <motion.div layout>
@@ -141,7 +168,7 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
             {job.yearsOfExperience && (
               <div className="text-xs text-muted-foreground flex items-center">
                 <Network className="w-3 h-3 mr-1" />
-                {formattedString(job.yearsOfExperience)}
+                {getExperienceLabel(job.yearsOfExperience)}
               </div>
             )}
           </Box>

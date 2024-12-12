@@ -29,15 +29,15 @@ const formSchema = z.object({
 
 const options = [
   {
-    value: "Remote",
+    value: "remote",
     label: "Remote",
   },
   {
-    value: "Onsite",
+    value: "onsite",
     label: "Onsite",
   },
   {
-    value: "Hybrid",
+    value: "hybrid",
     label: "Hybrid",
   },
 ];

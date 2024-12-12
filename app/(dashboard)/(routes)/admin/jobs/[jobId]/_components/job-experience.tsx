@@ -29,15 +29,19 @@ const formSchema = z.object({
 
 const options = [
   {
-    value: "0-2 years",
+    value: "0",
+    label: "Fresh Graduate",
+  },
+  {
+    value: "2",
     label: "0-2 years",
   },
   {
-    value: "2-5 years",
+    value: "3",
     label: "2-5 years",
   },
   {
-    value: "5-10 years",
+    value: "5",
     label: "5-10 years",
   },
 ];

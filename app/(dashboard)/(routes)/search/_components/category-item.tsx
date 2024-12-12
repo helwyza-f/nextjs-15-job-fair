@@ -21,10 +21,12 @@ export default function CategoryItem({ label, value }: CategoryItemProps) {
   const isSelected = currentCategoryId === value;
 
   const onClick = () => {
+    const currentQueryParams = qs.parseUrl(window.location.href).query;
     const url = qs.stringifyUrl(
       {
         url: pathName,
         query: {
+          ...currentQueryParams,
           title: currentTitle,
           categoryId: isSelected ? "" : value,
         },

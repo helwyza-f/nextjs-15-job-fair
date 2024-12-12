@@ -119,7 +119,56 @@ export const getJobs = async ({
       });
     }
 
-    // Add other filters as needed (e.g., shiftTiming, workMode, etc.)
+    // filter shiftTiming
+    let shiftTimingData: string[] = [];
+    if (shiftTiming) {
+      if (Array.isArray(shiftTiming)) {
+        shiftTiming.map((item) => {
+          shiftTimingData.push(item);
+        });
+      } else {
+        shiftTimingData.push(shiftTiming);
+      }
+      query.where.AND.push({
+        shiftTiming: {
+          in: shiftTimingData,
+        },
+      });
+    }
+
+    // filter workmode
+    let workModeData: string[] = [];
+    if (workMode) {
+      if (Array.isArray(workMode)) {
+        workMode.map((item) => {
+          workModeData.push(item);
+        });
+      } else {
+        workModeData.push(workMode);
+      }
+      query.where.AND.push({
+        workMode: {
+          in: workModeData,
+        },
+      });
+    }
+
+    let experienceData: string[] = [];
+    if (yearsOfExperience) {
+      if (Array.isArray(yearsOfExperience)) {
+        yearsOfExperience.map((item) => {
+          experienceData.push(item);
+        });
+      } else {
+        experienceData.push(yearsOfExperience);
+      }
+      query.where.AND.push({
+        yearsOfExperience: {
+          in: experienceData,
+        },
+      });
+    }
+    // console.log(query);
 
     // Execute query
     const jobs = await db.job.findMany(query);

@@ -13,27 +13,19 @@ export default function SearchContainer() {
   const router = useRouter();
   const pathName = usePathname();
 
-  const currentCategoryId = searchParams.get("categoryId");
   const currentTitle = searchParams.get("title");
-  const updatedAtFilter = searchParams.get("updatedAtFilter");
-  const shiftTiming = searchParams.get("shiftTiming");
-  const workMode = searchParams.get("workMode");
-  const yearsOfExperience = searchParams.get("yearsOfExperience");
 
   const [value, setValue] = useState(currentTitle || "");
   const debounceValue = useDebounce(value);
 
   useEffect(() => {
+    const currentQueryParams = qs.parseUrl(window.location.href).query;
     const url = qs.stringifyUrl(
       {
         url: pathName,
         query: {
-          categoryId: currentCategoryId,
+          ...currentQueryParams,
           title: debounceValue,
-          updatedAtFilter: updatedAtFilter,
-          shiftTiming: shiftTiming,
-          workMode: workMode,
-          yearsOfExperience: yearsOfExperience,
         },
       },
       {
@@ -42,16 +34,7 @@ export default function SearchContainer() {
       }
     );
     router.push(url, { scroll: false });
-  }, [
-    debounceValue,
-    currentCategoryId,
-    router,
-    pathName,
-    updatedAtFilter,
-    shiftTiming,
-    workMode,
-    yearsOfExperience,
-  ]);
+  }, [debounceValue, router, pathName]);
 
   return (
     <>
