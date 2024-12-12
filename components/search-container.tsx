@@ -1,11 +1,58 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebounce } from "@/hooks/use-debounce";
+import qs from "query-string";
+
 export default function SearchContainer() {
-  const [value, setValue] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathName = usePathname();
+
+  const currentCategoryId = searchParams.get("categoryId");
+  const currentTitle = searchParams.get("title");
+  const updatedAtFilter = searchParams.get("updatedAtFilter");
+  const shiftTiming = searchParams.get("shiftTiming");
+  const workMode = searchParams.get("workMode");
+  const yearsOfExperience = searchParams.get("yearsOfExperience");
+
+  const [value, setValue] = useState(currentTitle || "");
+  const debounceValue = useDebounce(value);
+
+  useEffect(() => {
+    const url = qs.stringifyUrl(
+      {
+        url: pathName,
+        query: {
+          categoryId: currentCategoryId,
+          title: debounceValue,
+          updatedAtFilter: updatedAtFilter,
+          shiftTiming: shiftTiming,
+          workMode: workMode,
+          yearsOfExperience: yearsOfExperience,
+        },
+      },
+      {
+        skipEmptyString: true,
+        skipNull: true,
+      }
+    );
+    router.push(url, { scroll: false });
+  }, [
+    debounceValue,
+    currentCategoryId,
+    router,
+    pathName,
+    updatedAtFilter,
+    shiftTiming,
+    workMode,
+    yearsOfExperience,
+  ]);
+
   return (
     <>
       <div className="flex items-center gap-2 relative flex-1">

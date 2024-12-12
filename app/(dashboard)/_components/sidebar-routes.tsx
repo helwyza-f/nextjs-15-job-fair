@@ -1,8 +1,11 @@
 "use client";
+import Box from "@/components/box";
 import SidebarRouteItems from "./sidebar-route-items";
 import { BookMarked, Compass, Home, List, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import { Separator } from "@/components/ui/separator";
+import DateFilter from "./date-filter";
 
 const adminRoutes = [
   {
@@ -45,10 +48,11 @@ const guestRoutes = [
 ];
 
 export default function SidebarRoutes() {
-  const pathname = usePathname();
+  const pathName = usePathname();
   //   const router = useRouter();
 
-  const isAdminPage = pathname.startsWith("/admin");
+  const isAdminPage = pathName.startsWith("/admin");
+  const isSearchPage = pathName.startsWith("/search");
 
   const routes = isAdminPage ? adminRoutes : guestRoutes;
   return (
@@ -61,6 +65,23 @@ export default function SidebarRoutes() {
           href={route.href}
         />
       ))}
+
+      {isSearchPage && (
+        <Box className="px-4 py-4 items-start justify-start space-y-4 flex-col">
+          <Separator />
+          <h2 className="text-md text-muted-foreground tracking-wide">
+            Filters
+          </h2>
+          {/* filter the data by UpdatedAtField */}
+          <DateFilter />
+
+          <Separator />
+          <h2 className="text-md text-muted-foreground tracking-wide">
+            Working Schedule
+          </h2>
+          {/*  */}
+        </Box>
+      )}
     </div>
   );
 }

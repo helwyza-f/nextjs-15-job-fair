@@ -60,7 +60,7 @@ export const columns: ColumnDef<JobsColumns>[] = [
       return (
         <div
           className={cn(
-            "border px-2 py-1 text-md text-black flex justify-center  rounded-md w-1/2",
+            "border px-2 py-1 text-md text-black flex justify-center rounded-md w-1/2",
             isPublished
               ? "border-emerald-500 bg-emerald-100/80"
               : "bg-red-100/80"

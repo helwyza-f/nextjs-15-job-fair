@@ -34,7 +34,7 @@ export default function SidebarRouteItems({
           "text-purple-700 bg-purple-200/20 hover:bg-purple-700/30 hover:text-purple-700"
       )}
     >
-      <div className="flex items-center gap-x-2 py-4 ">
+      <div className="flex items-center gap-x-2 py-2 ">
         <Icon
           size={22}
           className={cn("text-neutral-500", isActive && "text-purple-700")}

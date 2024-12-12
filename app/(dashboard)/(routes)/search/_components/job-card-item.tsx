@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   BookmarkCheckIcon,
+  BookmarkIcon,
   BriefcaseBusiness,
   Currency,
   Layers,
@@ -27,6 +28,9 @@ import { cn, formattedString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { truncate } from "lodash";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface JobCardItemProps {
   job: Job;
@@ -39,7 +43,27 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
   const company = typeJob.company;
 
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
-  const SavedUserIcon = BookmarkCheckIcon;
+  const isSavedByUser = userId && job.savedUsers.includes(userId);
+  const SavedUserIcon = isSavedByUser ? BookmarkCheckIcon : BookmarkIcon;
+  const router = useRouter();
+  const onClickSaveJob = async () => {
+    try {
+      setIsBookmarkLoading(true);
+      if (isSavedByUser) {
+        await axios.patch(`/api/jobs/${job.id}/remove-job`);
+        toast.success("Job removed from bookmark.");
+      } else {
+        await axios.patch(`/api/jobs/${job.id}/save-job`);
+        toast.success("Job saved to bookmark.");
+      }
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong.");
+      console.log(error);
+    } finally {
+      setIsBookmarkLoading(false);
+    }
+  };
   return (
     <motion.div layout>
       <Card>
@@ -56,7 +80,16 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
               {isBookmarkLoading ? (
                 <Loader2 className="animate-spin h-4 w-4" />
               ) : (
-                <SavedUserIcon className={cn("h-4 w-4")} />
+                <div onClick={onClickSaveJob}>
+                  <SavedUserIcon
+                    className={cn(
+                      "h-4 w-4",
+                      isSavedByUser
+                        ? "text-emerald-500"
+                        : "text-muted-foreground"
+                    )}
+                  />
+                </div>
               )}
             </Button>
           </Box>
@@ -144,8 +177,9 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
             <Button
               className=" w-full hover:bg-purple-800 bg-purple-800/90 text-white hover:text-white "
               variant={"outline"}
+              onClick={onClickSaveJob}
             >
-              Save
+              {isSavedByUser ? "Saved" : "Save for later"}
             </Button>
           </Box>
         </div>

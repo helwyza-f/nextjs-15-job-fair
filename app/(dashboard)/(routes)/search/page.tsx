@@ -27,7 +27,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   });
   const { userId } = await auth();
   const jobs = await getJobs({ ...resolvedSearchParams });
-  // console.log(jobs);
+  // console.log(resolvedSearchParams);
+  // console.log(jobs.length);
   return (
     <>
       <div className="px-6 pt-6 mt-20 block md:hidden md:mb-0 ">
