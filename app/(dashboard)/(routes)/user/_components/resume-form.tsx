@@ -1,17 +1,17 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Job } from "@prisma/client";
+import { UserProfile } from "@prisma/client";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
-  File,
   FileCheck2Icon,
   FilePlus2,
-  ImagePlus,
   Loader2,
   Pencil,
+  ShieldCheckIcon,
+  ShieldX,
   Trash2,
   X,
 } from "lucide-react";
@@ -21,6 +21,8 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { cn } from "@/lib/utils";
+// import { DevTool } from "@hookform/devtools";
 
 interface UploadedFile {
   name: string;
@@ -29,12 +31,12 @@ interface UploadedFile {
 
 interface FilesUploadsProps {
   bucket: string; // Nama bucket di Supabase
-  jobId: string;
-  initialData: Job;
+  userId: string;
+  initialData: UserProfile | null;
 }
 
 const formSchema = z.object({
-  attachments: z.array(
+  resumes: z.array(
     z.object({
       name: z.string(),
       url: z.string(),
@@ -42,25 +44,27 @@ const formSchema = z.object({
   ),
 });
 
-const FileUploader: React.FC<FilesUploadsProps> = ({
+const ResumeForm: React.FC<FilesUploadsProps> = ({
   bucket,
-  jobId,
+  userId,
   initialData,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUpdatingActiveResume, setIsUpdatingActiveResume] = useState(false);
+  const [activeResume, setActiveResume] = useState<string | null>(
+    initialData?.activeResume ?? null,
+  );
   const toogleEditing = () => setIsEditing((current) => !current);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
-      attachments: (Array.isArray(initialData.attachments)
-        ? initialData.attachments.map<{ name: string; url: string }>(
-            (attachment) => ({
-              name: (attachment as { name: string; url: string }).name,
-              url: (attachment as { name: string; url: string }).url,
-            }),
-          )
+      resumes: (Array.isArray(initialData?.resumes)
+        ? initialData.resumes.map<{ name: string; url: string }>((resume) => ({
+            name: (resume as { name: string; url: string }).name,
+            url: (resume as { name: string; url: string }).url,
+          }))
         : []) as { name: string; url: string }[],
     },
   });
@@ -69,7 +73,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   const { isSubmitting, isValid } = form.formState;
   const values = useWatch({
     control,
-    name: "attachments",
+    name: "resumes",
   });
 
   const handleFileChange = async (
@@ -85,7 +89,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         const uniqueFileName = `${Date.now()}_${file.name}`;
         const { data, error } = await supabase.storage
           .from(bucket)
-          .upload(`job/attachments/${uniqueFileName}`, file);
+          .upload(`job/resumes/${uniqueFileName}`, file);
 
         if (error) {
           console.log(error.message);
@@ -102,7 +106,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         // Dapatkan URL file yang diunggah
         const { data: publicUrlData } = supabase.storage
           .from(bucket)
-          .getPublicUrl(`job/attachments/${uniqueFileName}`);
+          .getPublicUrl(`job/resumes/${uniqueFileName}`);
 
         // Tambahkan file yang berhasil diunggah ke daftar lokal
         const newFileEntry = {
@@ -111,8 +115,8 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         };
 
         // Update field value with new file
-        const currentAttachments = getValues("attachments") || [];
-        setValue("attachments", [...currentAttachments, newFileEntry]);
+        const currentAttachments = getValues("resumes") || [];
+        setValue("resumes", [...currentAttachments, newFileEntry]);
 
         setIsUploading(false);
       } catch (error) {
@@ -122,7 +126,11 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   };
 
   const handleDeleteFile = async (fileUrl: string) => {
-    // console.log(fileUrl);
+    console.log(fileUrl);
+    if (initialData?.activeResume === fileUrl) {
+      toast.error("Cannot delete active resume");
+      return;
+    }
     try {
       const filePath = fileUrl.split("/storage/v1/object/public/job-fair/")[1];
       if (!filePath) throw new Error("Invalid file URL");
@@ -134,10 +142,10 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
       }
 
       // Update attachments di state
-      const updatedAttachments = getValues("attachments").filter(
+      const updatedAttachments = getValues("resumes").filter(
         (file: UploadedFile) => file.url !== fileUrl,
       );
-      setValue("attachments", updatedAttachments); // Tidak memengaruhi `isEditing`
+      setValue("resumes", updatedAttachments); // Tidak memengaruhi `isEditing`
 
       toast.success("File deleted successfully");
     } catch (error) {
@@ -149,20 +157,44 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
     try {
       const data = {
         // ...values,
-        attachments: values.attachments ?? [],
+        resumes: values.resumes ?? [],
+        activeResume: activeResume,
       };
-      await axios.patch(`/api/jobs/${jobId}`, data);
+      console.log(data);
       setIsEditing(false); // Keluar dari mode edit setelah submit
+      await axios.patch(`/api/users/${userId}`, data);
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
     }
   };
 
+  const handleSetActiveResume = async (resumeUrl: string) => {
+    const currentResumes = getValues("resumes") || [];
+    const updatedResumes = currentResumes.map((resume) => ({
+      ...resume,
+      isActive: resume.url === resumeUrl, // Menandai resume aktif
+    }));
+
+    // Memanggil API untuk memperbarui activeResume di backend
+    try {
+      setIsUpdatingActiveResume(true);
+      await axios.patch(`/api/users/${userId}/active-resume`, {
+        activeResume: resumeUrl,
+      });
+      toast.success("Active resume updated successfully.");
+      setActiveResume(resumeUrl);
+      setValue("resumes", updatedResumes);
+      setIsUpdatingActiveResume(false);
+    } catch (error) {
+      toast.error("Failed to update active resume.");
+    }
+  };
+
   return (
-    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
+    <div className="mt-6 w-full flex-1 rounded-md border p-4">
       <div className="flex items-center justify-between font-medium">
-        <h2 className="text-lg font-bold text-neutral-700">Attachments</h2>
+        <h2 className="text-lg font-bold text-neutral-700">Your Resumes</h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
           {isEditing ? (
             <>Cancel</>
@@ -176,42 +208,60 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
       </div>
 
       {!isEditing &&
-        initialData.attachments &&
-        Array.isArray(initialData.attachments) &&
-        initialData.attachments.length === 0 && (
+        initialData?.resumes &&
+        Array.isArray(initialData?.resumes) &&
+        initialData?.resumes.length === 0 && (
           <p className="text-medium italic text-neutral-500">
-            No attachments yet.
+            No resumes uploaded
           </p>
         )}
 
       {!isEditing &&
-        initialData.attachments &&
-        Array.isArray(initialData.attachments) &&
-        initialData.attachments.length != 0 && (
+        initialData?.resumes &&
+        Array.isArray(initialData?.resumes) &&
+        initialData?.resumes.length != 0 && (
           <div className="flex flex-col">
-            {initialData.attachments
-              // difilter untuk ngecheck apakah nilai dalam object tersebut bukan null, hanya mengembalikan yg tidak null
-              .filter(
-                (file): file is { name: string; url: string } => file !== null,
-              )
-              // setelah di filter, dan dipastikan nilai masing2 properti didalam objek tidak null, baru di looping
-              .map((file, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center justify-start gap-3 rounded-md bg-gray-100 p-2"
-                  >
-                    <Link
-                      href={file.url}
-                      className="text-blue-500"
-                      target="_blank"
-                    >
-                      {file.name}
-                    </Link>
-                    <FileCheck2Icon className="h-5 w-5" />
-                  </div>
-                );
-              })}
+            {values.map((file, index) => (
+              <div
+                key={index}
+                className={`flex items-center justify-between gap-3 rounded-md p-2 transition-all duration-300 ${
+                  activeResume === file.url
+                    ? "border-l-4 border-purple-500 bg-purple-100"
+                    : "bg-gray-100"
+                }`}
+              >
+                <Link
+                  href={file.url}
+                  className="flex gap-2 font-semibold text-blue-500"
+                  target="_blank"
+                >
+                  {file.name}
+                  <FileCheck2Icon className="h-5 w-5" />
+                </Link>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "flex items-center justify-center gap-2",
+                    activeResume === file.url
+                      ? "text-emerald-500"
+                      : "text-red-500",
+                  )}
+                  onClick={() => handleSetActiveResume(file.url)} // Mengatur resume aktif
+                >
+                  {isUpdatingActiveResume ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : activeResume === file.url ? (
+                    <span className="flex items-center gap-2">
+                      Live <ShieldCheckIcon className="h-4 w-4" />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      Activate <ShieldX className="h-4 w-4" />
+                    </span>
+                  )}
+                </Button>
+              </div>
+            ))}
           </div>
         )}
 
@@ -221,7 +271,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={control}
-                name="attachments"
+                name="resumes"
                 render={({ field }) => {
                   return (
                     <FormItem>
@@ -240,7 +290,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
                               </div>
                               <input
                                 type="file"
-                                accept=".pdf, .doc, .docx, .jpg, .jpeg, .png"
+                                accept=".pdf"
                                 onChange={handleFileChange}
                                 className="hidden"
                               />
@@ -299,4 +349,4 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   );
 };
 
-export default FileUploader;
+export default ResumeForm;

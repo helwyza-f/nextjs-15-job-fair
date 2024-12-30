@@ -31,6 +31,7 @@ model Job {
 
   @@index([categoryId])
   @@index([companyId])
+  @@index([title])
 }
 
 model Company {
@@ -62,4 +63,19 @@ model Category {
   jobs      Job[]    @relation
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserProfile {
+  userId       String       @id @map("_id")
+  fullName     String?
+  email        String?
+  contact      String?
+  appliedJobs  AppliedJob[]
+  resumes      Json?        @default("[]")
+  activeResume String?
+}
+
+type AppliedJob {
+  jobId     String
+  AppliedAt DateTime @default(now())
 }

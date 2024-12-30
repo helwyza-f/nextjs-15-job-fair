@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, PhoneIcon, UserCircleIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -13,34 +13,32 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import ComboBox from "@/components/ui/combo-box";
+import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Job } from "@prisma/client";
+import { UserProfile } from "@prisma/client";
+import Box from "@/components/box";
 import { cn } from "@/lib/utils";
 
-interface CategoryFormProps {
-  initialData: Job;
-  jobId: string;
-  options: { label: string; value: string }[];
+interface ContactFormProps {
+  initialData: UserProfile | null;
+  userId: string;
 }
 
 const formSchema = z.object({
-  categoryId: z.string().min(1),
+  contact: z.string().min(10, {
+    message: "Contact Number is required",
+  }),
 });
 
-export default function CategoryForm({
-  initialData,
-  jobId,
-  options,
-}: CategoryFormProps) {
+export default function ContactForm({ initialData, userId }: ContactFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: initialData.categoryId?.toString() || "",
+      contact: initialData?.contact || "",
     },
   });
 
@@ -48,8 +46,9 @@ export default function CategoryForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/jobs/${jobId}`, values);
-      toast.success("Category updated.");
+      console.log(values);
+      const response = await axios.patch(`/api/users/${userId}`, values);
+      toast.success("Contact updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
@@ -59,55 +58,35 @@ export default function CategoryForm({
 
   const toogleEditing = () => setIsEditing((current) => !current);
 
-  const selectedOption = options.find(
-    (option) => option.value === initialData.categoryId?.toString(),
-  );
-
   return (
-    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
-      <div className="flex items-center justify-between font-medium">
-        <h2 className="text-lg font-bold text-neutral-700">Job Category</h2>
-        <Button onClick={toogleEditing} variant={"ghost"}>
-          {isEditing ? (
-            <>Cancel</>
-          ) : (
-            <>
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit
-            </>
-          )}
-        </Button>
-      </div>
-
-      {/* display the title when not editing */}
+    <Box>
       {!isEditing && (
-        <p
+        <div
           className={cn(
-            "text-md mt-2",
-            !initialData.categoryId && "italic text-neutral-500",
+            "text-md mt-2 flex items-center gap-2 font-medium",
+            !initialData?.contact && "italic text-neutral-500",
           )}
         >
-          {selectedOption?.label || "Not selected yet"}
-        </p>
+          <PhoneIcon className="mr-2 h-6 w-6" />
+          {`${initialData?.contact}` || "No contact"}
+        </div>
       )}
-
-      {/* display the form when editing */}
       {isEditing && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-4 space-y-4"
+            className="flex flex-1 items-center gap-2"
           >
             <FormField
               control={form.control}
-              name="categoryId"
+              name="contact"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full">
                   <FormControl>
-                    <ComboBox
-                      heading="Select a category"
-                      options={options}
+                    <Input
                       {...field}
+                      disabled={isSubmitting}
+                      placeholder="e.g. 628-123-4567"
                     />
                   </FormControl>
                   <FormMessage />
@@ -122,6 +101,9 @@ export default function CategoryForm({
           </form>
         </Form>
       )}
-    </div>
+      <Button onClick={toogleEditing} variant={"ghost"}>
+        {isEditing ? "Cancel" : "Edit"}
+      </Button>
+    </Box>
   );
 }

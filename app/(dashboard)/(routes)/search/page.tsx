@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import CategoryList from "./_components/categories-list";
 import CategoriesList from "./_components/categories-list";
 import PageContent from "./_components/page-content";
+import AppliedFilters from "./_components/applied-filters";
 
 interface SearchPageProps {
   searchParams: {
@@ -38,6 +39,9 @@ export default async function SearchPage(props: SearchPageProps) {
       <div className="p-5">
         {/* categories */}
         <CategoriesList categories={categories} />
+
+        {/* Applied Filters */}
+        <AppliedFilters categories={categories} />
 
         {/* page content */}
         <PageContent jobs={jobs} userId={userId} />

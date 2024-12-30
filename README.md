@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Fair Application
+
+Ini adalah aplikasi Job Fair yang dibangun menggunakan Next.js dan Supabase. Aplikasi ini memungkinkan pengguna untuk mencari, melamar, dan mengelola pekerjaan.
+
+## Prerequisites
+
+Sebelum menjalankan aplikasi, pastikan Anda telah menginstal:
+
+- [Node.js](https://nodejs.org/) (versi 14 atau lebih baru)
+- [Yarn](https://yarnpkg.com/) atau [npm](https://www.npmjs.com/)
+- [MongoDB](https://www.mongodb.com/) atau akses ke database MongoDB yang sudah ada
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone repository ini:**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   git clone https://github.com/username/repo-name.git
+   cd repo-name
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Instal dependensi:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   Jika Anda menggunakan npm:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+   Atau jika Anda menggunakan Yarn:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   yarn install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   note: pastikan untuk menambahkan flag --legacy-peer-deps atau --forces jika menggunakan npm
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Buat file `.env` di root direktori proyek dan tambahkan variabel lingkungan:**
 
-## Deploy on Vercel
+   Salin konten dari `.env.example` dan sesuaikan dengan informasi Anda.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Jalankan aplikasi:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   Untuk menjalankan server pengembangan, gunakan perintah berikut:
+
+   ```bash
+   npm run dev
+   ```
+
+   Atau jika Anda menggunakan Yarn:
+
+   ```bash
+   yarn dev
+   ```
+
+5. **Buka aplikasi di browser:**
+
+   Akses aplikasi di [http://localhost:3000](http://localhost:3000).
+
+## Fitur
+
+- Pencarian pekerjaan
+- Melamar pekerjaan
+- Mengelola resume
+- Mengelola perusahaan
+
+## Kontribusi
+
+Jika Anda ingin berkontribusi pada proyek ini, silakan buat pull request atau buka isu untuk diskusi.
+
+## Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).

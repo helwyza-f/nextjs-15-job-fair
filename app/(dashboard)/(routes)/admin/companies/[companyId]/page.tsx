@@ -18,6 +18,7 @@ import LogoForm from "./_components/logo-form";
 import CompanyOverview from "./_components/company-overview";
 import CompanyCoverForm from "./_components/company-cover";
 import CompanySocials from "./_components/company-socials";
+import WhyJoinUs from "./_components/why-join-us";
 
 export default async function JobsDetailsPage({
   params,
@@ -53,16 +54,16 @@ export default async function JobsDetailsPage({
   const isComplete = requiredFields.every(Boolean);
 
   return (
-    <div className="p-6 mt-20 md:mt-0">
+    <div className="mt-20 p-6 md:mt-0">
       <Link href={"/admin/companies"} scroll={false}>
         <div className="flex items-center gap-x-2 text-sm text-neutral-500">
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="h-4 w-4" />
           Back
         </div>
       </Link>
 
       {/* title */}
-      <div className="flex items-center justify-between my-4">
+      <div className="my-4 flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
           <h1 className="text-2xl font-bold">Company Setup</h1>
           <span className="text-sm text-neutral-500">
@@ -72,8 +73,8 @@ export default async function JobsDetailsPage({
       </div>
 
       {/* container layout form */}
-      <div className="mt-16 my-32">
-        <div className="flex flex-col md:flex-row gap-6">
+      <div className="my-32 mt-16">
+        <div className="flex flex-col gap-6 md:flex-row">
           {/* left side */}
           <div className="flex-1">
             {/* title */}
@@ -108,8 +109,12 @@ export default async function JobsDetailsPage({
             <CompanyCoverForm initialData={company} companyId={companyId} />
           </div>
         </div>
+        {/* why join us */}
+        <div className="mt-6 w-full">
+          <WhyJoinUs initialData={company} companyId={companyId} />
+        </div>
         {/* company overview */}
-        <div className="w-full mt-6">
+        <div className="mt-6 w-full">
           <CompanyOverview initialData={company} companyId={companyId} />
         </div>
       </div>

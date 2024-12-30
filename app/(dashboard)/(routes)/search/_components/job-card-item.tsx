@@ -87,14 +87,14 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
 
   const getExperienceLabel = (experience: string) => {
     const selectedOption = experienceData.find(
-      (option) => option.value === experience
+      (option) => option.value === experience,
     );
     return selectedOption ? selectedOption.label : "N/A";
   };
   return (
     <motion.div layout>
       <Card>
-        <div className="h-full w-full p-4 flex flex-col items-start justify-start gap-y-4">
+        <div className="flex h-full w-full flex-col items-start justify-start gap-y-4 p-4">
           {/* card header */}
           <Box>
             <p className="text-sm text-muted-foreground">
@@ -105,7 +105,7 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
             </p>
             <Button variant={"ghost"} size={"icon"}>
               {isBookmarkLoading ? (
-                <Loader2 className="animate-spin h-4 w-4" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <div onClick={onClickSaveJob}>
                   <SavedUserIcon
@@ -113,7 +113,7 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
                       "h-4 w-4",
                       isSavedByUser
                         ? "text-emerald-500"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                   />
                 </div>
@@ -122,7 +122,7 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
           </Box>
           {/* company details */}
           <Box className="items-center justify-start gap-x-4">
-            <div className="w-12 h-12 min-w-12 min-h-12 border p-2 rounded-md relative flex items-center justify-center overflow-hidden">
+            <div className="relative flex h-12 min-h-12 w-12 min-w-12 items-center justify-center overflow-hidden rounded-md border p-2">
               {company?.logoUrl && (
                 <Image
                   alt={company?.name}
@@ -134,12 +134,12 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
               )}
             </div>
             <div className="w-full overflow-hidden">
-              <p className="text-stone-700 font-semibold text-base w-full truncate">
+              <p className="w-full truncate text-base font-semibold text-stone-700">
                 {job.title}
               </p>
               <Link
-                href={`/company/${company?.id}`}
-                className="text-sm text-purple-500 font-medium w-full truncate"
+                href={`/companies/${company?.id}`}
+                className="w-full truncate text-sm font-medium text-purple-500"
               >
                 {company?.name}
               </Link>
@@ -148,32 +148,32 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
           {/* Job detail */}
           <Box>
             {job.shiftTiming && (
-              <div className="text-xs text-muted-foreground flex items-center">
-                <BriefcaseBusiness className="w-3 h-3 mr-1" />
+              <div className="flex items-center text-xs text-muted-foreground">
+                <BriefcaseBusiness className="mr-1 h-3 w-3" />
                 {formattedString(job.shiftTiming)}
               </div>
             )}
             {job.workMode && (
-              <div className="text-xs text-muted-foreground flex items-center">
-                <Layers className="w-3 h-3 mr-1" />
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Layers className="mr-1 h-3 w-3" />
                 {formattedString(job.workMode)}
               </div>
             )}
             {job.hourlyRate && (
-              <div className="text-xs text-muted-foreground flex items-center">
-                <Currency className="w-3 h-3 mr-1" />
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Currency className="mr-1 h-3 w-3" />
                 {`${formattedString(job.hourlyRate)} $/hr`}
               </div>
             )}
             {job.yearsOfExperience && (
-              <div className="text-xs text-muted-foreground flex items-center">
-                <Network className="w-3 h-3 mr-1" />
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Network className="mr-1 h-3 w-3" />
                 {getExperienceLabel(job.yearsOfExperience)}
               </div>
             )}
           </Box>
           {job.short_description && (
-            <CardDescription className="text-xs tracking-wide leading-relaxed">
+            <CardDescription className="text-xs leading-relaxed tracking-wide">
               {truncate(job.short_description, {
                 length: 150,
                 omission: "...",
@@ -181,28 +181,28 @@ export default function JobCardItem({ job, userId }: JobCardItemProps) {
             </CardDescription>
           )}
           {job.tags.length > 0 && (
-            <Box className="flex-wrap justify-start gap-2 ">
+            <Box className="flex-wrap justify-start gap-2">
               {job.tags.slice(0, 6).map((tag, index) => (
                 <p
                   key={index}
-                  className="bg-gray-100 text-xs rounded-md px-2 py-[2px] font-semibold text-neutral-700"
+                  className="rounded-md bg-gray-100 px-2 py-[2px] text-xs font-semibold text-neutral-700"
                 >
                   {tag}
                 </p>
               ))}
             </Box>
           )}
-          <Box className="gap-2 mt-auto ">
+          <Box className="mt-auto gap-2">
             <Link href={`/search/${job.id}`} className="w-full">
               <Button
-                className="w-full border-purple-500 text-purple-500 hover:bg-transparent hover:text-purple-600 "
+                className="w-full border-purple-500 text-purple-500 hover:bg-transparent hover:text-purple-600"
                 variant={"outline"}
               >
                 Details
               </Button>
             </Link>
             <Button
-              className=" w-full hover:bg-purple-800 bg-purple-800/90 text-white hover:text-white "
+              className="w-full bg-purple-800/90 text-white hover:bg-purple-800 hover:text-white"
               variant={"outline"}
               onClick={onClickSaveJob}
             >

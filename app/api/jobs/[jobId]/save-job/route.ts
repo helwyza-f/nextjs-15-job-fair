@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: Promise<{ jobId: string }> }
+  { params }: { params: Promise<{ jobId: string }> },
 ) => {
   try {
     const { userId } = await auth();
@@ -18,7 +18,6 @@ export const PATCH = async (
     const job = await db.job.findUnique({
       where: {
         id: jobId,
-        userId,
       },
     });
     if (!job) {
@@ -33,7 +32,6 @@ export const PATCH = async (
     const updatedJob = await db.job.update({
       where: {
         id: jobId,
-        userId,
       },
       data: updatedData,
     });
