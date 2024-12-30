@@ -25,11 +25,6 @@ const adminRoutes = [
     label: "Companies",
     href: "/admin/companies",
   },
-  {
-    icon: Compass,
-    label: "Analytics",
-    href: "/admin/analytics",
-  },
 ];
 const guestRoutes = [
   {
@@ -50,7 +45,7 @@ const guestRoutes = [
   {
     icon: BookMarked,
     label: "Saved Jobs",
-    href: "/savedJobs",
+    href: "/saved-jobs",
   },
 ];
 
@@ -124,7 +119,7 @@ export default function SidebarRoutes() {
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url, { scroll: false });
   };
@@ -143,7 +138,7 @@ export default function SidebarRoutes() {
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url, { scroll: false });
   };
@@ -162,14 +157,14 @@ export default function SidebarRoutes() {
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url, { scroll: false });
   };
 
   const routes = isAdminPage ? adminRoutes : guestRoutes;
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex w-full flex-col">
       {routes.map((route) => (
         <SidebarRouteItems
           key={route.href}
@@ -180,10 +175,10 @@ export default function SidebarRoutes() {
       ))}
 
       {isSearchPage && (
-        <Box className="px-4 py-2 items-start justify-start flex-col">
+        <Box className="flex-col items-start justify-start px-4 py-2">
           <Separator />
-          <div className="py-4 flex flex-col gap-2">
-            <h2 className="text-md text-muted-foreground tracking-wide">
+          <div className="flex flex-col gap-2 py-4">
+            <h2 className="text-md tracking-wide text-muted-foreground">
               Filters
             </h2>
             {/* filter the data by UpdatedAtField */}
@@ -193,7 +188,7 @@ export default function SidebarRoutes() {
           <Separator />
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger className="text-md text-muted-foreground tracking-wide hover:no-underline">
+              <AccordionTrigger className="text-md tracking-wide text-muted-foreground hover:no-underline">
                 Working Schedule
               </AccordionTrigger>
               <AccordionContent>
@@ -208,7 +203,7 @@ export default function SidebarRoutes() {
           <Separator />
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger className="text-md text-muted-foreground tracking-wide hover:no-underline">
+              <AccordionTrigger className="text-md tracking-wide text-muted-foreground hover:no-underline">
                 Working Mode
               </AccordionTrigger>
               <AccordionContent className="w-full">
@@ -223,7 +218,7 @@ export default function SidebarRoutes() {
           <Separator />
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
-              <AccordionTrigger className="text-md text-muted-foreground tracking-wide  hover:no-underline">
+              <AccordionTrigger className="text-md tracking-wide text-muted-foreground hover:no-underline">
                 Experience
               </AccordionTrigger>
               <AccordionContent className="w-full">

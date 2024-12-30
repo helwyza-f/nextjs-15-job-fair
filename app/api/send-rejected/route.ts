@@ -1,12 +1,13 @@
-import { sendEmail } from "@/lib/mail";
+import { sendRejectedEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, res: Response) => {
   const { email, fullName } = await req.json();
-  const response = await sendEmail({
+  const response = await sendRejectedEmail({
     to: email,
     name: fullName,
-    subject: "Thank you for applying to our job",
+    subject:
+      "We are sorry to inform you that you've been rejected to our application",
   });
 
   if (response?.messageId) {

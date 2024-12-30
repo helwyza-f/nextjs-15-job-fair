@@ -19,10 +19,7 @@ interface JobDetailsPageContentProps {
   profile: UserProfile | null;
   jobId: string;
 }
-interface Attachment {
-  name: string;
-  url: string;
-}
+
 export default function JobDetailsPageContent({
   job,
   profile,

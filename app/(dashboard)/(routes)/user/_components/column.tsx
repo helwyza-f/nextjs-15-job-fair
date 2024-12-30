@@ -27,7 +27,7 @@ export const columns: ColumnDef<AppliedJobsColumns>[] = [
     ),
     cell: ({ row }) => {
       const { title } = row.original;
-      return <div className="text-md font-bold tracking-wider">{title}</div>;
+      return <div className="text-md tracking-wide">{title}</div>;
     },
   },
   {

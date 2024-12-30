@@ -21,6 +21,7 @@ export const getJobs = async ({
   yearsOfExperience,
   savedJobs,
 }: GetJobsParams): Promise<Job[]> => {
+  const { userId } = await auth();
   try {
     const query: any = {
       where: {
@@ -95,12 +96,12 @@ export const getJobs = async ({
           startDate = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
-            1
+            1,
           );
           endDate = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth() + 1,
-            0
+            0,
           ); // Last day of current month
           endDate.setHours(23, 59, 59, 999);
           break;
@@ -169,6 +170,14 @@ export const getJobs = async ({
       });
     }
     // console.log(query);
+
+    if (savedJobs) {
+      query.where.AND.push({
+        savedUsers: {
+          has: userId,
+        },
+      });
+    }
 
     // Execute query
     const jobs = await db.job.findMany(query);
