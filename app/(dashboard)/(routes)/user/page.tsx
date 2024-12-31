@@ -16,7 +16,8 @@ import React from "react";
 import { truncate } from "lodash";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, PlusIcon } from "lucide-react";
+import axios from "axios";
 
 async function UserProfile() {
   const { userId } = await auth();
@@ -31,7 +32,7 @@ async function UserProfile() {
       userId: userId,
     },
   });
-
+  const role = profile?.role;
   const jobs = await db.job.findMany({
     where: {
       id: {
@@ -81,9 +82,34 @@ async function UserProfile() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 md:p-8">
-      <Box>
+    <div className="mt-12 flex flex-col items-center justify-center p-4 md:mt-4 md:p-8">
+      <Box className="flex w-full items-center justify-between">
         <CostumBreadCrumb breadCrumbPage="My Profile" />
+        {/* for recruiter */}
+        {role === "recruiter" && (
+          <div className="flex items-center justify-center gap-4">
+            <Link href={"/admin/jobs"}>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                className="border-purple-700/70"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Post Job
+              </Button>
+            </Link>
+            <Link href={"/admin/companies"}>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                className="border-purple-700/70"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Create Company
+              </Button>
+            </Link>
+          </div>
+        )}
       </Box>
       <Box className="mt-8 flex w-full flex-col space-y-6 rounded-lg border p-4 shadow-md md:p-8">
         {user && user.hasImage && (
@@ -100,68 +126,74 @@ async function UserProfile() {
         <NameForm initialData={profile} userId={userId} />
         <EmailForm initialData={profile} userId={userId} />
         <ContactForm initialData={profile} userId={userId} />
-        <ResumeForm initialData={profile} userId={userId} bucket="job-fair" />
+        {role === "job-seeker" && (
+          <ResumeForm initialData={profile} userId={userId} bucket="job-fair" />
+        )}
       </Box>
-
-      {/* applied jobs */}
-      <Box className="mt-12 flex flex-col items-start justify-start">
-        <h2 className="text-2xl font-semibold text-muted-foreground">
-          Applied Jobs
-        </h2>
-        <div className="mt-6 w-full">
-          <DataTable columns={columns} data={formattedAppliedJobs} />
-        </div>
-      </Box>
-
-      {/* followed companies */}
-      <Box className="mt-12 flex flex-col items-start justify-start">
-        <h2 className="text-2xl font-semibold text-muted-foreground">
-          Followed Companies
-        </h2>
-        <div className="mt-6 grid w-full grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-4">
-          {followedCompanies.length === 0 ? (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-muted-foreground">
-                You are not following any company yet.
-              </p>
+      {/* for job seeker */}
+      {role === "job-seeker" && (
+        <>
+          {/* applied jobs */}
+          <Box className="mt-12 flex flex-col items-start justify-start">
+            <h2 className="text-2xl font-semibold text-muted-foreground">
+              Applied Jobs
+            </h2>
+            <div className="mt-6 w-full">
+              <DataTable columns={columns} data={formattedAppliedJobs} />
             </div>
-          ) : (
-            <React.Fragment>
-              {followedCompanies.map((company) => (
-                <Card key={company.id} className="relative space-y-3 p-3">
-                  <div className="flex w-full items-center justify-end">
-                    <Link href={`/companies/${company.id}`}>
-                      <Button variant="ghost">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </div>
-                  {company.logoUrl && (
-                    <div className="relative flex h-20 w-full items-center justify-center overflow-hidden">
-                      <Image
-                        src={company.logoUrl}
-                        alt={company.name}
-                        fill
-                        sizes="100%"
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                  )}
-                  <CardTitle className="text-lg">{company.name}</CardTitle>
-                  {company.description && (
-                    <CardDescription className="text-sm">
-                      {truncate(company.description, {
-                        length: 80,
-                        omission: "...",
-                      })}
-                    </CardDescription>
-                  )}
-                </Card>
-              ))}
-            </React.Fragment>
-          )}
-        </div>
-      </Box>
+          </Box>
+
+          {/* followed companies */}
+          <Box className="mt-12 flex flex-col items-start justify-start">
+            <h2 className="text-2xl font-semibold text-muted-foreground">
+              Followed Companies
+            </h2>
+            <div className="mt-6 grid w-full grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-4">
+              {followedCompanies.length === 0 ? (
+                <div className="flex flex-col items-center justify-center">
+                  <p className="text-muted-foreground">
+                    You are not following any company yet.
+                  </p>
+                </div>
+              ) : (
+                <React.Fragment>
+                  {followedCompanies.map((company) => (
+                    <Card key={company.id} className="relative space-y-3 p-3">
+                      <div className="flex w-full items-center justify-end">
+                        <Link href={`/companies/${company.id}`}>
+                          <Button variant="ghost">
+                            <EyeIcon className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                      {company.logoUrl && (
+                        <div className="relative flex h-20 w-full items-center justify-center overflow-hidden">
+                          <Image
+                            src={company.logoUrl}
+                            alt={company.name}
+                            fill
+                            sizes="100%"
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <CardTitle className="text-lg">{company.name}</CardTitle>
+                      {company.description && (
+                        <CardDescription className="text-sm">
+                          {truncate(company.description, {
+                            length: 80,
+                            omission: "...",
+                          })}
+                        </CardDescription>
+                      )}
+                    </Card>
+                  ))}
+                </React.Fragment>
+              )}
+            </div>
+          </Box>
+        </>
+      )}
     </div>
   );
 }

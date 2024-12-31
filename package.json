@@ -10,7 +10,7 @@
     "prisma": "npx prisma db push && npx prisma generate "
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.3.2",
+    "@clerk/nextjs": "^6.9.6",
     "@google/generative-ai": "^0.21.0",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.0.0",

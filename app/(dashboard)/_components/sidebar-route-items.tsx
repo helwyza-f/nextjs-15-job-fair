@@ -9,12 +9,14 @@ interface SidebarRouteItemsProps {
   icon: LucideIcon;
   label: string;
   href: string;
+  onLinkClick: () => void;
 }
 
 export default function SidebarRouteItems({
   icon: Icon,
   label,
   href,
+  onLinkClick,
 }: SidebarRouteItemsProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -29,12 +31,13 @@ export default function SidebarRouteItems({
       href={href}
       scroll={false}
       className={cn(
-        "flex items-center gap-x-2 py-2 text-neutral-500 text-sm font-medium pl-6 transition-all hover:text-neutral-600 hover:bg-neutral-300/50",
+        "flex items-center gap-x-2 py-2 pl-6 text-sm font-medium text-neutral-500 transition-all hover:bg-neutral-300/50 hover:text-neutral-600",
         isActive &&
-          "text-purple-700 bg-purple-200/20 hover:bg-purple-700/30 hover:text-purple-700"
+          "bg-purple-200/20 text-purple-700 hover:bg-purple-700/30 hover:text-purple-700",
       )}
+      onClick={onLinkClick}
     >
-      <div className="flex items-center gap-x-2 py-2 ">
+      <div className="flex items-center gap-x-2 py-2">
         <Icon
           size={22}
           className={cn("text-neutral-500", isActive && "text-purple-700")}
@@ -44,8 +47,8 @@ export default function SidebarRouteItems({
       {/* highlight */}
       <div
         className={cn(
-          "ml-auto opacity-0 border-2 border-purple-700 h-full transition-all",
-          isActive && "opacity-100"
+          "ml-auto h-full border-2 border-purple-700 opacity-0 transition-all",
+          isActive && "opacity-100",
         )}
       ></div>
     </Link>

@@ -26,7 +26,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     return redirect("/");
   }
   const resolvedSearchParams = await searchParams;
-  const jobs = await getJobs({ ...resolvedSearchParams, userIdParam: userId });
+  const jobs = await getJobs({ ...resolvedSearchParams });
 
   const categories = await db.category.findMany({
     orderBy: {

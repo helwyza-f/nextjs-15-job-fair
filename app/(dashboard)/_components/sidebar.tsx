@@ -2,14 +2,18 @@ import React from "react";
 import Logo from "./logo";
 import SidebarRoutes from "./sidebar-routes";
 
-export default function Sidebar() {
+interface SidebarProps {
+  onLinkClick: () => void;
+}
+
+export default function Sidebar({ onLinkClick }: SidebarProps) {
   return (
-    <div className="h-full border-r flex flex-col overflow-y-auto bg-white">
+    <div className="flex h-full flex-col overflow-y-auto border-r bg-white">
       <div className="p-6">
         <Logo />
       </div>
-      <div className="flex flex-col w-full">
-        <SidebarRoutes />
+      <div className="flex w-full flex-col">
+        <SidebarRoutes onLinkClick={onLinkClick} />
       </div>
     </div>
   );

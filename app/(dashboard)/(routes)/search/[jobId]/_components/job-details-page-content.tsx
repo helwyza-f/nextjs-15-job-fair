@@ -32,10 +32,7 @@ export default function JobDetailsPageContent({
   const onApply = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.patch(
-        `/api/users/${profile?.userId}/applied-jobs`,
-        jobId,
-      );
+      await axios.patch(`/api/users/${profile?.userId}/applied-jobs`, jobId);
 
       // send email to user
       await axios.post("/api/thank-you", {
@@ -119,7 +116,10 @@ export default function JobDetailsPageContent({
         </div>
         {/* action button */}
         <div>
-          {profile ? (
+          {profile?.fullName &&
+          profile.contact &&
+          profile.email &&
+          profile.activeResume ? (
             <>
               {!profile.appliedJobs.some(
                 (appliedJob) => appliedJob.jobId === jobId,
@@ -127,6 +127,7 @@ export default function JobDetailsPageContent({
                 <Button
                   className="bg-purple-700 px-8 text-sm hover:bg-purple-900 hover:shadow-sm"
                   onClick={() => setIsOpen(true)}
+                  disabled={profile.role === "recruiter"}
                 >
                   Apply
                 </Button>

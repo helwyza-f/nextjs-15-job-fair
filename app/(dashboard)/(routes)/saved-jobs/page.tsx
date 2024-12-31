@@ -26,7 +26,11 @@ export default async function SavedJobsPage(props: SavedJobsPageProps) {
   if (!userId) {
     return redirect("/");
   }
-  const jobs = await getJobs({ ...resolvedSearchParams, userIdParam: userId });
+  const jobs = await getJobs({
+    ...resolvedSearchParams,
+    userIdParam: userId,
+    savedJobs: true,
+  });
 
   return (
     <div className="flex flex-col gap-4">

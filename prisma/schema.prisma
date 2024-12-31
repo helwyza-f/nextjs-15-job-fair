@@ -75,6 +75,7 @@ model UserProfile {
   appliedJobs  AppliedJob[]
   resumes      Json?        @default("[]")
   activeResume String?
+  role         String?      @default("")
 }
 
 type AppliedJob {

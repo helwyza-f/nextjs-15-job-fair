@@ -98,7 +98,11 @@ const experienceData = [
   },
 ];
 
-export default function SidebarRoutes() {
+interface SidebarRoutesProps {
+  onLinkClick: () => void;
+}
+
+export default function SidebarRoutes({ onLinkClick }: SidebarRoutesProps) {
   const pathName = usePathname();
   const router = useRouter();
 
@@ -122,6 +126,7 @@ export default function SidebarRoutes() {
       },
     );
     router.push(url, { scroll: false });
+    // onLinkClick();
   };
 
   const handleWorkMode = (workMode: string[]) => {
@@ -141,6 +146,7 @@ export default function SidebarRoutes() {
       },
     );
     router.push(url, { scroll: false });
+    // onLinkClick();
   };
 
   const handleExperience = (experience: string[]) => {
@@ -160,6 +166,7 @@ export default function SidebarRoutes() {
       },
     );
     router.push(url, { scroll: false });
+    // onLinkClick();
   };
 
   const routes = isAdminPage ? adminRoutes : guestRoutes;
@@ -171,18 +178,19 @@ export default function SidebarRoutes() {
           icon={route.icon}
           label={route.label}
           href={route.href}
+          onLinkClick={onLinkClick}
         />
       ))}
 
       {isSearchPage && (
         <Box className="flex-col items-start justify-start px-4 py-2">
           <Separator />
-          <div className="flex flex-col gap-2 py-4">
+          <div className="flex flex-col gap-2 border-none py-4">
             <h2 className="text-md tracking-wide text-muted-foreground">
               Filters
             </h2>
             {/* filter the data by UpdatedAtField */}
-            <DateFilter />
+            <DateFilter onLinkClick={onLinkClick} />
           </div>
 
           <Separator />

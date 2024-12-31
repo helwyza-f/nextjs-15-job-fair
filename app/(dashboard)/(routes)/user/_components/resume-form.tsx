@@ -235,7 +235,7 @@ const ResumeForm: React.FC<FilesUploadsProps> = ({
                   className="flex gap-2 font-semibold text-blue-500"
                   target="_blank"
                 >
-                  {file.name}
+                  <span className="w-48 truncate">{file.name}</span>
                   <FileCheck2Icon className="h-5 w-5" />
                 </Link>
                 <Button

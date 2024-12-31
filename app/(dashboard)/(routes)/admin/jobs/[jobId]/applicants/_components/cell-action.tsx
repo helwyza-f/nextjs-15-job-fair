@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 interface CellActionProps {
   id: string;
@@ -29,6 +30,7 @@ export default function CellAction({
   selectedUsers,
   rejectedUsers,
 }: CellActionProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isRejection, setIsRejection] = useState(false);
 
@@ -45,6 +47,7 @@ export default function CellAction({
         jobId,
       });
       toast.success("User selected");
+      router.refresh();
     } catch (error) {
       console.error("Error sending selected user:", error);
     } finally {
@@ -62,6 +65,7 @@ export default function CellAction({
         jobId,
       });
       toast.success("User rejected");
+      router.refresh();
     } catch (error) {
       console.error("Error sending rejected user:", error);
     } finally {
@@ -99,7 +103,7 @@ export default function CellAction({
                   ? "Selected"
                   : isRejected
                     ? "Rejected"
-                    : "Not Selected"}
+                    : "Not Selected yet"}
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem

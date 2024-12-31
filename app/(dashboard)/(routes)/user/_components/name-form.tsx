@@ -19,6 +19,7 @@ import axios from "axios";
 import { UserProfile } from "@prisma/client";
 import Box from "@/components/box";
 import { cn } from "@/lib/utils";
+import Banner from "@/components/banner";
 
 interface NameFormProps {
   initialData: UserProfile | null;
@@ -47,7 +48,7 @@ export default function NameForm({ initialData, userId }: NameFormProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       console.log(values);
-      const response = await axios.patch(`/api/users/${userId}`, values);
+      await axios.patch(`/api/users/${userId}`, values);
       toast.success("Profile updated.");
       toogleEditing();
       router.refresh();
@@ -68,6 +69,12 @@ export default function NameForm({ initialData, userId }: NameFormProps) {
           )}
         >
           <UserCircleIcon className="mr-2 h-6 w-6" />
+          {!initialData?.fullName && (
+            <Banner
+              variant={"warning"}
+              label="You may wanna set your Profile first"
+            />
+          )}
           {initialData?.fullName || "No name"}
         </div>
       )}

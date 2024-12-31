@@ -13,9 +13,23 @@ import { Footer } from "../_components/footer";
 
 export default async function page() {
   const { userId } = await auth();
+
   if (!userId) {
     return redirect("/");
   }
+
+  const userProfile = await db.userProfile.findUnique({
+    where: { userId: userId },
+  });
+
+  if (!userProfile) {
+    return redirect("/user");
+  }
+
+  if (userProfile.role === null || userProfile.role === "") {
+    return redirect("/select-role");
+  }
+
   const jobs = await getJobs({});
 
   const categories = await db.category.findMany({

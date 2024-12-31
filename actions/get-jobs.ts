@@ -23,7 +23,6 @@ export const getJobs = async ({
   savedJobs,
   userIdParam,
 }: GetJobsParams): Promise<Job[]> => {
-  const { userId } = await auth();
   try {
     const query: any = {
       where: {
@@ -172,23 +171,15 @@ export const getJobs = async ({
       });
     }
     // console.log(query);
-
-    if (userIdParam) {
-      query.where.AND.push({
-        userId: {
-          not: userIdParam,
-        },
-      });
-    }
-
     if (savedJobs) {
       query.where.AND.push({
         savedUsers: {
-          has: userId,
+          has: userIdParam,
         },
       });
     }
 
+    // console.log(query);
     // Execute query
     const jobs = await db.job.findMany(query);
     return jobs;

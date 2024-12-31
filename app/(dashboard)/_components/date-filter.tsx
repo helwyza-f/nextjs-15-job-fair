@@ -11,7 +11,11 @@ import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";
 import { useState } from "react";
 
-export default function DateFilter() {
+interface DateFilterProps {
+  onLinkClick: () => void;
+}
+
+export default function DateFilter({ onLinkClick }: DateFilterProps) {
   const data = [
     { value: "all", label: "All time" },
     { value: "today", label: "Today" },
@@ -40,19 +44,20 @@ export default function DateFilter() {
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url, { scroll: false });
+    onLinkClick();
   };
 
   return (
     <Select onValueChange={(selected) => onChange(selected)}>
       <SelectTrigger
         className={cn(
-          "w-44 ",
+          "w-44",
           selectedValue
-            ? "bg-blue-50 border-purple-500 text-purple-600" // Style for selected
-            : "bg-gray-50 border-gray-300 text-gray-500" // Style for placeholder
+            ? "border-purple-500 bg-blue-50 text-purple-600" // Style for selected
+            : "border-gray-300 bg-gray-50 text-gray-500", // Style for placeholder
         )}
       >
         <SelectValue
@@ -62,7 +67,7 @@ export default function DateFilter() {
       </SelectTrigger>
       <SelectContent>
         {data.map((item) => (
-          <SelectItem key={item.value} value={item.value}>
+          <SelectItem key={item.value} value={item.value} >
             {item.label}
           </SelectItem>
         ))}

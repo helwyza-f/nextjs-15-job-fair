@@ -1,7 +1,7 @@
+"use client";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -9,11 +9,21 @@ import {
 import { Menu } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Sidebar from "./sidebar";
+import { useState } from "react";
 
 export default function MobileSidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Sheet>
-      <SheetTrigger className="md:hidden pr-4 opacity-75 hover:opacity-100 transition-all">
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger
+        className="pr-4 opacity-75 transition-all hover:opacity-100 md:hidden"
+        onClick={() => setIsOpen(true)}
+      >
         <Menu />
       </SheetTrigger>
       <SheetContent className="bg-white p-0" side={"left"}>
@@ -21,9 +31,8 @@ export default function MobileSidebar() {
           <VisuallyHidden>
             <SheetTitle>Menu Sidebar</SheetTitle>
           </VisuallyHidden>
-          {/* <SheetDescription>Akses menu utama aplikasi</SheetDescription> */}
         </SheetHeader>
-        <Sidebar />
+        <Sidebar onLinkClick={handleLinkClick} />
       </SheetContent>
     </Sheet>
   );

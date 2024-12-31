@@ -30,19 +30,19 @@ export const Footer = () => {
           </div>
           <p className="text-base font-semibold">Connect with us</p>
           <div className="flex w-full items-center gap-6">
-            <Link href={"www.facebook.com"}>
+            <Link href={"https://github.com/helwyza-f"}>
               <Facebook className="h-5 w-5 text-muted-foreground transition-all hover:scale-125 hover:text-purple-500" />
             </Link>
 
-            <Link href={"www.facebook.com"}>
+            <Link href={"https://github/helwyza-f"}>
               <Twitter className="h-5 w-5 text-muted-foreground transition-all hover:scale-125 hover:text-purple-500" />
             </Link>
 
-            <Link href={"www.facebook.com"}>
+            <Link href={"https://www.linkedin.com/in/helwiza-fahry-192a19230/"}>
               <Linkedin className="h-5 w-5 text-muted-foreground transition-all hover:scale-125 hover:text-purple-500" />
             </Link>
 
-            <Link href={"www.facebook.com"}>
+            <Link href={"https://www.linkedin.com/in/helwiza-fahry-192a19230/"}>
               <Youtube className="h-5 w-5 text-muted-foreground transition-all hover:scale-125 hover:text-purple-500" />
             </Link>
           </div>
