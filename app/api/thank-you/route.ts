@@ -1,7 +1,7 @@
 import { sendEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
-export const POST = async (req: Request, res: Response) => {
+export const POST = async (req: Request) => {
   const { email, fullName } = await req.json();
   const response = await sendEmail({
     to: email,

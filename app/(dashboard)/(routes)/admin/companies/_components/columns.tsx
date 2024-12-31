@@ -2,7 +2,7 @@
 import Sort from "./sort";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { EditIcon, Eye, MoreHorizontal } from "lucide-react";
+import { EditIcon, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -24,11 +23,11 @@ const logoPath = "/img/logo-placeholder-image.png";
 export const columns: ColumnDef<CompaniesColumns>[] = [
   {
     accessorKey: "LogoUrl",
-    header: () => <div className="font-bold tracking-wider text-md">Logo</div>,
+    header: () => <div className="text-md font-bold tracking-wider">Logo</div>,
     cell: ({ row }) => {
       const { logoUrl } = row.original;
       return (
-        <div className="w-20 h-20 flex items-center justify-center relative rounded-full">
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-full">
           <Image
             src={logoUrl || logoPath}
             fill
@@ -36,7 +35,7 @@ export const columns: ColumnDef<CompaniesColumns>[] = [
             // width={20}
             // height={20}
             alt="Company Logo"
-            className="w-full h-full rounded-full object-cover"
+            className="h-full w-full rounded-full object-cover"
           />
         </div>
       );
@@ -46,8 +45,8 @@ export const columns: ColumnDef<CompaniesColumns>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <div className="flex items-center gap-x-2 ">
-          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+        <div className="flex items-center gap-x-2">
+          <h2 className="text-md font-bold tracking-wider text-neutral-700">
             Company Name
           </h2>
           <Sort
@@ -61,8 +60,8 @@ export const columns: ColumnDef<CompaniesColumns>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
-        <div className="flex items-center gap-x-2 ">
-          <h2 className="font-bold tracking-wider text-md text-neutral-700">
+        <div className="flex items-center gap-x-2">
+          <h2 className="text-md font-bold tracking-wider text-neutral-700">
             Date
           </h2>
           <Sort

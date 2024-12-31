@@ -27,7 +27,7 @@ const formSchema = z.object({
   shiftTiming: z.string().min(1),
 });
 
-let options = [
+const options = [
   {
     value: "full-time",
     label: "Full Time",

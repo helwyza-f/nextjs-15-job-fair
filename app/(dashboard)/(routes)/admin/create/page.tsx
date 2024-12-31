@@ -40,8 +40,8 @@ export default function JobCreatePage() {
     try {
       const response = await axios.post("/api/jobs", values);
       // console.log(response);
-      console.log("Navigating to:", `/admin/jobs/${response.data.id}`);
       router.push(`/admin/jobs/${response.data.id}`, { scroll: false });
+      console.log("Navigating to:", `/admin/jobs/${response.data.id}`);
       toast.success("Job created successfully");
     } catch (error) {
       console.log((error as Error)?.message);
@@ -50,7 +50,7 @@ export default function JobCreatePage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
+    <div className="mx-auto flex h-full max-w-5xl p-6 md:items-center md:justify-center">
       <div>
         <h1 className="text-2xl">Name your job</h1>
         <p className="text-sm text-neutral-500">
@@ -61,7 +61,7 @@ export default function JobCreatePage() {
         {/* form */}
         <Form {...form}>
           <form
-            className="space-y-8 mt-8"
+            className="mt-8 space-y-8"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             {/* form field */}

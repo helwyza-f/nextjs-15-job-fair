@@ -3,10 +3,11 @@ import NavbarRoutes from "./navbar-routes";
 import MobileSidebar from "./mobile-sidebar";
 export default function Navbar() {
   return (
-    <div className="p-4 border-b h-full flex items-center bg-white shadow-md">
+    <div className="flex h-full items-center border-b bg-white p-4 shadow-md">
       {/* Mobile routes */}
       <MobileSidebar />
       {/* Desktop routes */}
+
       <NavbarRoutes />
     </div>
   );

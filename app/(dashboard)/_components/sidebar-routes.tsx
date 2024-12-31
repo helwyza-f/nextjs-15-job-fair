@@ -105,7 +105,7 @@ export default function SidebarRoutes() {
   const isAdminPage = pathName.startsWith("/admin");
   const isSearchPage = pathName.startsWith("/search");
 
-  const handleShiftTiming = (shiftTiming: any[]) => {
+  const handleShiftTiming = (shiftTiming: string[]) => {
     const currentQueryParams = qs.parseUrl(window.location.href).query;
     const updatedQueryParams = {
       ...currentQueryParams,
@@ -124,7 +124,7 @@ export default function SidebarRoutes() {
     router.push(url, { scroll: false });
   };
 
-  const handleWorkMode = (workMode: any[]) => {
+  const handleWorkMode = (workMode: string[]) => {
     const currentQueryParams = qs.parseUrl(window.location.href).query;
     const updatedQueryParams = {
       ...currentQueryParams,
@@ -143,7 +143,7 @@ export default function SidebarRoutes() {
     router.push(url, { scroll: false });
   };
 
-  const handleExperience = (experience: any[]) => {
+  const handleExperience = (experience: string[]) => {
     const currentQueryParams = qs.parseUrl(window.location.href).query;
     const updatedQueryParams = {
       ...currentQueryParams,

@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
-import { columns, JobsColumns } from "./_components/columns";
+import { columns } from "./_components/columns";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
@@ -35,11 +35,11 @@ export default async function JobsPage() {
   }));
 
   return (
-    <div className="p-8 pt-28 md:pt-10 ">
+    <div className="p-8 pt-28 md:pt-10">
       <div className="flex items-end justify-end">
         <Link href={"/admin/create"} scroll={false}>
           <Button variant={"default"}>
-            <Plus className="h-5 w-5 mr-2" />
+            <Plus className="mr-2 h-5 w-5" />
             New Job
           </Button>
         </Link>

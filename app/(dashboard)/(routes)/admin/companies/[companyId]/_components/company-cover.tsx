@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { intersection, z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import ImageUpload from "@/components/image-upload";
-import { Input } from "@/components/ui/input";
+
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Company, Job } from "@prisma/client";
+import { Company } from "@prisma/client";
 import Image from "next/image";
 
 interface CompanyCoverFormProps {
@@ -47,21 +47,22 @@ export default function CompanyCoverForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/companies/${companyId}`, values);
+      await axios.patch(`/api/companies/${companyId}`, values);
       toogleEditing();
       router.refresh();
       toast.success("coverImageUrl updated.");
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 
   const toogleEditing = () => setIsEditing((current) => !current);
 
   return (
-    <div className="mt-6 border bg-neutral-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">
+    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
+      <div className="flex items-center justify-between font-medium">
+        <h2 className="text-lg font-bold text-neutral-700">
           Company Cover Image
         </h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
@@ -69,7 +70,7 @@ export default function CompanyCoverForm({
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="w-4 h-4 mr-2" />
+              <Pencil className="mr-2 h-4 w-4" />
               Edit
             </>
           )}
@@ -79,15 +80,15 @@ export default function CompanyCoverForm({
       {/* display the coverImageUrl when not editing */}
       {!isEditing &&
         (!initialData.coverImageUrl ? (
-          <div className="flex items-center justify-center h-60 bg-neutral-200 rounded-md">
+          <div className="flex h-60 items-center justify-center rounded-md bg-neutral-200">
             <ImageIcon className="h-10 w-10 text-neutral-500" />
           </div>
         ) : (
-          <div className="relative w-full h-60 aspect-video mt-2">
+          <div className="relative mt-2 aspect-video h-60 w-full">
             <Image
               alt="cover image"
               fill
-              className="w-full h-full object-cover rounded-md "
+              className="h-full w-full rounded-md object-cover"
               src={initialData.coverImageUrl}
               sizes="100%"
             />
@@ -99,7 +100,7 @@ export default function CompanyCoverForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="mt-4 space-y-4"
           >
             <FormField
               control={form.control}

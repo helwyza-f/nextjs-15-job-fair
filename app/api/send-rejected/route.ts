@@ -1,17 +1,37 @@
+import { db } from "@/lib/db";
 import { sendRejectedEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
-export const POST = async (req: Request, res: Response) => {
-  const { email, fullName } = await req.json();
-  const response = await sendRejectedEmail({
-    to: email,
-    name: fullName,
-    subject:
-      "We are sorry to inform you that you've been rejected to our application",
-  });
+export const POST = async (req: Request) => {
+  const { email, fullName, jobId, id } = await req.json();
 
-  if (response?.messageId) {
-    return NextResponse.json({ message: "Email sent" }, { status: 200 });
+  try {
+    // Update database untuk menambahkan email ke rejectedUsers
+    await db.job.update({
+      where: {
+        id: jobId,
+      },
+      data: {
+        rejectedUsers: {
+          push: id, // Menambahkan email ke array rejectedUsers
+        },
+      },
+    });
+
+    const response = await sendRejectedEmail({
+      to: email,
+      name: fullName,
+      subject: "You've been rejected for the job",
+    });
+    if (response?.messageId) {
+      return NextResponse.json({ message: "Email sent" }, { status: 200 });
+    }
+    return NextResponse.json({ message: "Email not sent" }, { status: 500 });
+  } catch (error) {
+    console.error("Error updating rejected user:", error);
+    return NextResponse.json(
+      { message: "Failed to update user" },
+      { status: 500 },
+    );
   }
-  return NextResponse.json({ message: "Email not sent" }, { status: 500 });
 };

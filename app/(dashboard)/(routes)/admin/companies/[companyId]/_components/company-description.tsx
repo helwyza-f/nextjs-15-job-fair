@@ -13,7 +13,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Company } from "@prisma/client";
@@ -48,21 +48,22 @@ export default function CompanyDescription({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/companies/${companyId}`, values);
+      await axios.patch(`/api/companies/${companyId}`, values);
       toast.success("Company Description Updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 
   const toogleEditing = () => setIsEditing((current) => !current);
 
   return (
-    <div className="mt-6 border bg-neutral-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">
+    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
+      <div className="flex items-center justify-between font-medium">
+        <h2 className="text-lg font-bold text-neutral-700">
           Company Description
         </h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
@@ -70,7 +71,7 @@ export default function CompanyDescription({
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="w-4 h-4 mr-2" />
+              <Pencil className="mr-2 h-4 w-4" />
               Edit
             </>
           )}
@@ -85,7 +86,7 @@ export default function CompanyDescription({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="mt-4 space-y-4"
           >
             <FormField
               control={form.control}

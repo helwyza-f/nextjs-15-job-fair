@@ -16,7 +16,7 @@ import {
 import GeneratePrompt from "@/scripts/ai-studio";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Company, Job } from "@prisma/client";
+import { Company } from "@prisma/client";
 import Preview from "@/components/preview";
 import Editor from "@/components/editor";
 import { cn } from "@/lib/utils";
@@ -55,12 +55,13 @@ export default function CompanyOverview({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // return console.log(values.overview);
     try {
-      const response = await axios.patch(`/api/companies/${companyId}`, values);
+      await axios.patch(`/api/companies/${companyId}`, values);
       toast.success("Company overview updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 
@@ -88,15 +89,15 @@ export default function CompanyOverview({
   };
 
   return (
-    <div className="mt-6 border bg-neutral-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">Company overview</h2>
+    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
+      <div className="flex items-center justify-between font-medium">
+        <h2 className="text-lg font-bold text-neutral-700">Company overview</h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="w-4 h-4 mr-2" />
+              <Pencil className="mr-2 h-4 w-4" />
               Edit
             </>
           )}
@@ -108,7 +109,7 @@ export default function CompanyOverview({
         <div
           className={cn(
             "mt-2 text-sm",
-            !initialData.overview && "text-neutral-500 italic"
+            !initialData.overview && "italic text-neutral-500",
           )}
         >
           {!initialData.overview && "No overview yet."}
@@ -119,49 +120,49 @@ export default function CompanyOverview({
       {/* display the form when editing */}
       {isEditing && (
         <>
-          <div className="w-full flex items-center gap-4 my-2">
+          <div className="my-2 flex w-full items-center gap-4">
             <Textarea
               //     type="text"
               placeholder="Write your company overview here, AI will help you generate a summary."
               value={roleName}
               rows={1}
               onChange={(e) => setRoleName(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full rounded-md border border-gray-300 p-2"
             />
 
             {isPrompting ? (
               <>
                 <Button>
-                  <Loader2 className=" h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
               </>
             ) : (
               <>
                 <Button onClick={handlePromptGeneration}>
-                  <Lightbulb className=" h-4 w-4 " />
+                  <Lightbulb className="h-4 w-4" />
                 </Button>
               </>
             )}
           </div>
-          <p className="text-sm text-muted-foreground text-right">
+          <p className="text-right text-sm text-muted-foreground">
             Note: This will generate a company overview based on the prompt
           </p>
           {aiValue && (
-            <div className="mt-4 bg-white rounded-lg w-full h-96 max-h-96 overflow-y-scroll p-3 relative text-muted-foreground">
+            <div className="relative mt-4 h-96 max-h-96 w-full overflow-y-scroll rounded-lg bg-white p-3 text-muted-foreground">
               {aiValue}
               <Button
-                className="absolute top-3 right-3 z-10 animate-pulse ease-in-out bg-violet-500 text-white hover:bg-violet-600"
+                className="absolute right-3 top-3 z-10 animate-pulse bg-violet-500 text-white ease-in-out hover:bg-violet-600"
                 variant="outline"
                 onClick={onCopy}
               >
-                <Copy className="w-4 h-4 " />
+                <Copy className="h-4 w-4" />
               </Button>
             </div>
           )}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 mt-4"
+              className="mt-4 space-y-4"
             >
               <FormField
                 control={form.control}

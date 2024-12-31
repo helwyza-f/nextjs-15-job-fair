@@ -16,22 +16,37 @@ interface CellActionProps {
   id: string;
   fullName: string;
   email: string;
+  jobId: string;
+  selectedUsers: string[];
+  rejectedUsers: string[];
 }
 
-export default function CellAction({ id, fullName, email }: CellActionProps) {
+export default function CellAction({
+  id,
+  fullName,
+  email,
+  jobId,
+  selectedUsers,
+  rejectedUsers,
+}: CellActionProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isRejection, setIsRejection] = useState(false);
+
+  const isSelected = selectedUsers.includes(id);
+  const isRejected = rejectedUsers.includes(id);
 
   const sendSelected = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post("/api/send-selected", {
+      await axios.post("/api/send-selected", {
+        id,
         email,
         fullName,
+        jobId,
       });
-      toast.success("Email sent");
+      toast.success("User selected");
     } catch (error) {
-      console.error("Error sending selected email:", error);
+      console.error("Error sending selected user:", error);
     } finally {
       setIsLoading(false);
     }
@@ -40,13 +55,15 @@ export default function CellAction({ id, fullName, email }: CellActionProps) {
   const sendRejected = async () => {
     setIsRejection(true);
     try {
-      const response = await axios.post("/api/send-rejected", {
+      await axios.post("/api/send-rejected", {
+        id,
         email,
         fullName,
+        jobId,
       });
-      toast.success("Email sent");
+      toast.success("User rejected");
     } catch (error) {
-      console.error("Error sending rejected email:", error);
+      console.error("Error sending rejected user:", error);
     } finally {
       setIsRejection(false);
     }
@@ -55,7 +72,11 @@ export default function CellAction({ id, fullName, email }: CellActionProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0"
+          // disabled={isSelected || isRejected}
+        >
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
@@ -66,26 +87,42 @@ export default function CellAction({ id, fullName, email }: CellActionProps) {
             <Loader2 className="h-4 w-4 animate-spin" />
           </DropdownMenuItem>
         ) : (
-          <DropdownMenuItem
-            onClick={sendSelected}
-            className="flex items-center justify-center"
-          >
-            <BadgeCheck className="h-4 w-4" />
-            Selected
-          </DropdownMenuItem>
-        )}
-        {isRejection ? (
-          <DropdownMenuItem className="flex items-center justify-center">
-            <Loader2 className="h-4 w-4 animate-spin" />
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem
-            onClick={sendRejected}
-            className="flex items-center justify-center"
-          >
-            <BadgeX className="h-4 w-4" />
-            Rejected
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem className="flex items-center justify-center">
+              {isSelected ? (
+                <BadgeCheck className="h-4 w-4 text-green-500" />
+              ) : isRejected ? (
+                <BadgeX className="h-4 w-4 text-red-500" />
+              ) : null}
+              <span className="ml-2">
+                {isSelected
+                  ? "Selected"
+                  : isRejected
+                    ? "Rejected"
+                    : "Not Selected"}
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={sendSelected}
+              className="flex items-center justify-center"
+              disabled={isSelected || isRejected}
+            >
+              <BadgeCheck className="h-4 w-4" />
+              <span className={isSelected || isRejected ? "text-gray-500" : ""}>
+                Select
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={sendRejected}
+              className="flex items-center justify-center"
+              disabled={isSelected || isRejected}
+            >
+              <BadgeX className="h-4 w-4" />
+              <span className={isSelected || isRejected ? "text-gray-500" : ""}>
+                Reject
+              </span>
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

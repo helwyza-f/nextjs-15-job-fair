@@ -15,7 +15,7 @@ export const PATCH = async (req: Request) => {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    let profile = await db.userProfile.findUnique({
+    const profile = await db.userProfile.findUnique({
       where: {
         userId: userId,
       },

@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -31,20 +31,20 @@ export default function SearchContainer() {
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url, { scroll: false });
   }, [debounceValue, router, pathName]);
 
   return (
-    <>
-      <div className="flex items-center gap-2 relative flex-1">
-        <Search className="h-4 w-4 text-neutral-600 absolute left-3" />
+    <Suspense fallback={<div className="hidden">Loading...</div>}>
+      <div className="relative flex flex-1 items-center gap-2">
+        <Search className="absolute left-3 h-4 w-4 text-neutral-600" />
         <Input
           placeholder="Search for the jobs using title"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-full pl-9 rounded-lg bg-purple-50/80 focus-visible:ring-purple-200 text-sm"
+          className="w-full rounded-lg bg-purple-50/80 pl-9 text-sm focus-visible:ring-purple-200"
         />
         {value && (
           <Button
@@ -52,12 +52,12 @@ export default function SearchContainer() {
             variant={"ghost"}
             size={"icon"}
             type="button"
-            className="cursor-pointer absolute right-3 hover:scale-125 hover:bg-transparent"
+            className="absolute right-3 cursor-pointer hover:scale-125 hover:bg-transparent"
           >
             <X className="h-4 w-4" />
           </Button>
         )}
       </div>
-    </>
+    </Suspense>
   );
 }

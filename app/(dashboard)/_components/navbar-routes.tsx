@@ -6,6 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 export default function NavbarRoutes() {
   const pathname = usePathname();
@@ -16,11 +17,13 @@ export default function NavbarRoutes() {
   return (
     <>
       {isSearchPage && (
-        <div className="hidden md:flex w-full px-2 pr-8 items-center gap-x-6">
-          <SearchContainer />
+        <div className="hidden w-full items-center gap-x-6 px-2 pr-8 md:flex">
+          <Suspense fallback={<div>Loading...</div>}>
+            <SearchContainer />
+          </Suspense>
         </div>
       )}
-      <div className="flex gap-x-4 ml-auto">
+      <div className="ml-auto flex gap-x-4">
         {isAdminPage || isUserPage ? (
           <Link href="/" scroll={false}>
             <Button

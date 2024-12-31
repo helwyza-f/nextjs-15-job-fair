@@ -10,6 +10,7 @@ export type GetJobsParams = {
   workMode?: string;
   yearsOfExperience?: string;
   savedJobs?: boolean;
+  userIdParam?: string;
 };
 
 export const getJobs = async ({
@@ -20,6 +21,7 @@ export const getJobs = async ({
   workMode,
   yearsOfExperience,
   savedJobs,
+  userIdParam,
 }: GetJobsParams): Promise<Job[]> => {
   const { userId } = await auth();
   try {
@@ -121,7 +123,7 @@ export const getJobs = async ({
     }
 
     // filter shiftTiming
-    let shiftTimingData: string[] = [];
+    const shiftTimingData: string[] = [];
     if (shiftTiming) {
       if (Array.isArray(shiftTiming)) {
         shiftTiming.map((item) => {
@@ -138,7 +140,7 @@ export const getJobs = async ({
     }
 
     // filter workmode
-    let workModeData: string[] = [];
+    const workModeData: string[] = [];
     if (workMode) {
       if (Array.isArray(workMode)) {
         workMode.map((item) => {
@@ -154,7 +156,7 @@ export const getJobs = async ({
       });
     }
 
-    let experienceData: string[] = [];
+    const experienceData: string[] = [];
     if (yearsOfExperience) {
       if (Array.isArray(yearsOfExperience)) {
         yearsOfExperience.map((item) => {
@@ -170,6 +172,14 @@ export const getJobs = async ({
       });
     }
     // console.log(query);
+
+    if (userIdParam) {
+      query.where.AND.push({
+        userId: {
+          not: userIdParam,
+        },
+      });
+    }
 
     if (savedJobs) {
       query.where.AND.push({

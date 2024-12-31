@@ -1,5 +1,6 @@
+"use client";
 import { Category } from "@prisma/client";
-import React from "react";
+import React, { Suspense } from "react";
 import CategoryItem from "./category-item";
 
 interface CategoriesListProps {
@@ -11,11 +12,9 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
       {categories.map((category) => {
         return (
-          <CategoryItem
-            key={category.id}
-            label={category.name}
-            value={category.id}
-          />
+          <Suspense fallback={<div>Loading...</div>} key={category.id}>
+            <CategoryItem label={category.name} value={category.id} />
+          </Suspense>
         );
       })}
     </div>

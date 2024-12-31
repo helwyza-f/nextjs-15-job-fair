@@ -1,14 +1,8 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import {
-  ArrowLeft,
-  LayoutDashboard,
-  ListChecks,
-  PanelsTopLeft,
-} from "lucide-react";
+import { ArrowLeft, LayoutDashboard, PanelsTopLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import Banner from "@/components/banner";
 
 import { ObjectId } from "bson";
 import { IconBadge } from "@/components/icon-badge";
@@ -19,6 +13,7 @@ import CompanyOverview from "./_components/company-overview";
 import CompanyCoverForm from "./_components/company-cover";
 import CompanySocials from "./_components/company-socials";
 import WhyJoinUs from "./_components/why-join-us";
+import Banner from "@/components/banner";
 
 export default async function JobsDetailsPage({
   params,
@@ -45,7 +40,22 @@ export default async function JobsDetailsPage({
 
   if (!company) return redirect("/admin/jobs");
 
-  const requiredFields = [company.name];
+  const requiredFields = [
+    company.name,
+    company.description,
+    company.logoUrl,
+    company.coverImageUrl,
+    company.address_line_1,
+    company.address_line_2,
+    company.city,
+    company.state,
+    company.zip_code,
+    company.mail,
+    company.website,
+    company.linkedin,
+    company.whyJoinUs,
+    company.overview,
+  ];
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
@@ -71,6 +81,16 @@ export default async function JobsDetailsPage({
           </span>
         </div>
       </div>
+
+      {/* isComplete */}
+      {isComplete ? (
+        <Banner
+          label="You have completed all fields. You can now proceed to the next step."
+          variant="success"
+        />
+      ) : (
+        <Banner label="Please complete all fields." variant="warning" />
+      )}
 
       {/* container layout form */}
       <div className="my-32 mt-16">

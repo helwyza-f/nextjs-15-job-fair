@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: Promise<{ jobId: string }> }
+  { params }: { params: Promise<{ jobId: string }> },
 ) => {
   try {
     const { userId } = await auth();
@@ -29,7 +29,7 @@ export const PATCH = async (
       }
 
       // Validasi setiap file dalam attachments
-      data.attachments.forEach((file: any) => {
+      data.attachments.forEach((file: { name: string; url: string }) => {
         if (!file.name || !file.url) {
           throw new Error("Each attachment must include 'name' and 'url'.");
         }
@@ -48,15 +48,15 @@ export const PATCH = async (
     });
 
     return NextResponse.json(job);
-  } catch (error: any) {
-    console.error(`JOB PATCH ERROR: ${error.message || error}`);
+  } catch (error) {
+    console.log((error as Error)?.message);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
 
 export const DELETE = async (
   _req: Request,
-  { params }: { params: Promise<{ jobId: string }> }
+  { params }: { params: Promise<{ jobId: string }> },
 ) => {
   try {
     const { userId } = await auth();
@@ -70,7 +70,7 @@ export const DELETE = async (
     if (!jobId) {
       return NextResponse.json(
         { message: "Job ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const job = await db.job.findUnique({
@@ -86,14 +86,14 @@ export const DELETE = async (
 
     if (job.imageUrl) {
       const filePath = job.imageUrl.split(
-        "/storage/v1/object/public/job-fair/"
+        "/storage/v1/object/public/job-fair/",
       )[1];
       await supabase.storage.from("job-fair").remove([filePath]);
     }
     if (Array.isArray(job.attachments) && job.attachments.length > 0) {
       const fileUrls = job.attachments.map(
         (attachment: any) =>
-          attachment.url.split("/storage/v1/object/public/job-fair/")[1]
+          attachment.url.split("/storage/v1/object/public/job-fair/")[1],
       );
       await supabase.storage.from("job-fair").remove(fileUrls);
     }
@@ -108,13 +108,13 @@ export const DELETE = async (
 
     return NextResponse.json(
       { message: "Job deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error: any) {
     console.error(`JOB DELETE ERROR: ${error.message || error}`);
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };

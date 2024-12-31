@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { use } from "react";
 
 export const PATCH = async (
   req: Request,
@@ -35,7 +34,6 @@ export const PATCH = async (
       const updatedCompany = await db.company.update({
         where: {
           id: companyId,
-          userId: userId,
         },
         data: {
           followers: {

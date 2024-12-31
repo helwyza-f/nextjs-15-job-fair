@@ -1,19 +1,16 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Job } from "@prisma/client";
 import { z } from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
-  File,
   FileCheck2Icon,
   FilePlus2,
-  ImagePlus,
   Loader2,
   Pencil,
   Trash2,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -32,7 +29,7 @@ interface FilesUploadsProps {
   jobId: string;
   initialData: Job;
 }
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object({
   attachments: z.array(
     z.object({
@@ -52,6 +49,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
   const toogleEditing = () => setIsEditing((current) => !current);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       attachments: (Array.isArray(initialData.attachments)
@@ -83,7 +81,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
         setIsUploading(true);
 
         const uniqueFileName = `${Date.now()}_${file.name}`;
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from(bucket)
           .upload(`job/attachments/${uniqueFileName}`, file);
 
@@ -156,6 +154,7 @@ const FileUploader: React.FC<FilesUploadsProps> = ({
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 

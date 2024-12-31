@@ -205,7 +205,7 @@ export const rejectionTemplate = `<!DOCTYPE html>
 														<tr>
 															<td class="pad">
 																<div style="color:#ffffff;font-family:Oswald, Arial, Helvetica Neue, Helvetica, sans-serif;font-size:18px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
-																	<p style="margin: 0;">Hi <=% name %>, we regret to inform you that your application for the job has been rejected. We appreciate the time and effort you invested in applying. Although your qualifications are commendable, we have chosen to move forward with other candidates who more closely match our requirements. We encourage you to apply for future openings and wish you the best in your job search. Thank you for your understanding.</p>
+																	<p style="margin: 0;">Hi <%= name %>, we regret to inform you that your application for the job has been rejected. We appreciate the time and effort you invested in applying. Although your qualifications are commendable, we have chosen to move forward with other candidates who more closely match our requirements. We encourage you to apply for future openings and wish you the best in your job search. Thank you for your understanding.</p>
 																</div>
 															</td>
 														</tr>

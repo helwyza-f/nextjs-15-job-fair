@@ -90,16 +90,16 @@ export default async function JobsDetailsPage({
   const isComplete = requiredFields.every(Boolean);
 
   return (
-    <div className="p-6 mt-20 md:mt-0">
+    <div className="mt-20 p-6 md:mt-0">
       <Link href={"/admin/jobs"} scroll={false}>
         <div className="flex items-center gap-x-2 text-sm text-neutral-500">
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="h-4 w-4" />
           Back
         </div>
       </Link>
 
       {/* title */}
-      <div className="flex items-center justify-between my-4">
+      <div className="my-4 flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
           <h1 className="text-2xl font-bold">Job Setup</h1>
           <span className="text-sm text-neutral-500">
@@ -124,8 +124,8 @@ export default async function JobsDetailsPage({
       )}
 
       {/* container layout form */}
-      <div className="mt-16 my-32">
-        <div className="flex flex-col md:flex-row gap-6">
+      <div className="my-32 mt-16">
+        <div className="flex flex-col gap-6 md:flex-row">
           {/* left side */}
           <div className="flex-1">
             {/* title */}
@@ -208,7 +208,7 @@ export default async function JobsDetailsPage({
         </div>
 
         {/* description full side */}
-        <div className="w-full mt-6">
+        <div className="mt-6 w-full">
           <JobDescriptionForm initialData={job} jobId={jobId} />
         </div>
       </div>

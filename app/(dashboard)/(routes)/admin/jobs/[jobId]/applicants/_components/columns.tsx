@@ -3,8 +3,6 @@ import Sort from "./sort";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { FileIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import CellAction from "./cell-action";
 
@@ -12,12 +10,15 @@ import CellAction from "./cell-action";
 // You can use a Zod schema here if you want.
 export type ApplicantsColumns = {
   id: string;
+  jobId: string;
   fullName: string;
   email: string;
   contact: string;
   AppliedAt: string;
   resumeUrl: string;
   resumeName: string;
+  selectedUsers: string[];
+  rejectedUsers: string[];
 };
 
 export const columns: ColumnDef<ApplicantsColumns>[] = [
@@ -120,9 +121,19 @@ export const columns: ColumnDef<ApplicantsColumns>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { id, fullName, email } = row.original;
+      const { id, fullName, email, jobId, selectedUsers, rejectedUsers } =
+        row.original;
 
-      return <CellAction id={id} fullName={fullName} email={email} />;
+      return (
+        <CellAction
+          id={id}
+          fullName={fullName}
+          email={email}
+          jobId={jobId}
+          selectedUsers={selectedUsers}
+          rejectedUsers={rejectedUsers}
+        />
+      );
     },
   },
 ];

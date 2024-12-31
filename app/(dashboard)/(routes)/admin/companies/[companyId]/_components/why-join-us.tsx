@@ -16,7 +16,7 @@ import {
 import GeneratePrompt from "@/scripts/ai-studio";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Company, Job } from "@prisma/client";
+import { Company } from "@prisma/client";
 import Preview from "@/components/preview";
 import Editor from "@/components/editor";
 import { cn } from "@/lib/utils";
@@ -52,12 +52,13 @@ export default function WhyJoinUs({ initialData, companyId }: WhyJoinUsProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // return console.log(values.overview);
     try {
-      const response = await axios.patch(`/api/companies/${companyId}`, values);
+      await axios.patch(`/api/companies/${companyId}`, values);
       toast.success("Why join us updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 

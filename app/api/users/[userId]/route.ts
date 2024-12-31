@@ -27,7 +27,7 @@ export const PATCH = async (req: Request) => {
       });
     }
 
-    let profile = await db.userProfile.findUnique({
+    const profile = await db.userProfile.findUnique({
       where: {
         userId: userId,
       },

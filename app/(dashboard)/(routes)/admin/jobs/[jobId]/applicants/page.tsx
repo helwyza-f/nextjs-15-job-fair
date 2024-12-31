@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import React, { use } from "react";
+
 import { ApplicantsColumns, columns } from "./_components/columns";
 import { format } from "date-fns";
 import Box from "@/components/box";
@@ -28,23 +28,10 @@ export default async function page({
     redirect("/");
   }
 
-  let profiles = await db.userProfile.findMany({});
+  const profiles = await db.userProfile.findMany({});
   if (!profiles) {
     redirect("/admin/jobs");
   }
-
-  const jobs = await db.job.findMany({
-    where: {
-      userId: userId as string,
-    },
-    include: {
-      company: true,
-      category: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
 
   const filteredProfiles =
     profiles &&
@@ -68,6 +55,9 @@ export default async function page({
 
       return {
         id: profile.userId,
+        jobId: jobId,
+        selectedUsers: job.selectedUsers,
+        rejectedUsers: job.rejectedUsers,
         fullName: profile.fullName || "",
         email: profile.email || "",
         contact: profile.contact || "",

@@ -17,6 +17,8 @@ model Job {
   isPublished       Boolean   @default(false)
   tags              String[]  @default([])
   savedUsers        String[]  @default([])
+  rejectedUsers     String[]  @default([])
+  selectedUsers     String[]  @default([])
   shiftTiming       String?
   hourlyRate        String?
   yearsOfExperience String?

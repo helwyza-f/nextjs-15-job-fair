@@ -26,7 +26,7 @@ async function UserProfile() {
     redirect("/");
   }
 
-  let profile = await db.userProfile.findUnique({
+  const profile = await db.userProfile.findUnique({
     where: {
       userId: userId,
     },

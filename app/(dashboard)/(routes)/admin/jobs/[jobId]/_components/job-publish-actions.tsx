@@ -44,12 +44,9 @@ export default function JobPublishActions({
       toast.success(response.data.message);
 
       router.push("/admin/jobs", { scroll: false });
-    } catch (error: any) {
-      console.error(error);
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to delete the job. Please try again."
-      );
+    } catch (error) {
+      console.log((error as Error)?.message);
+      toast.error("Failed to delete the job. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -87,12 +84,12 @@ export default function JobPublishActions({
 
       {/* Modal Konfirmasi */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-md p-6 w-80">
-            <h2 className="text-lg font-bold mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-80 rounded-md bg-white p-6">
+            <h2 className="mb-4 text-lg font-bold">
               Are you sure you want to delete this job?
             </h2>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="mb-6 text-sm text-gray-600">
               This action cannot be undone.
             </p>
             <div className="flex justify-end gap-2">

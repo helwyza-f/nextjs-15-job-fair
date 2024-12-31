@@ -77,27 +77,28 @@ export default function CompanySocials({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/companies/${companyId}`, values);
+      await axios.patch(`/api/companies/${companyId}`, values);
       toast.success("Company Name Updated.");
       toogleEditing();
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.log((error as Error)?.message);
     }
   };
 
   const toogleEditing = () => setIsEditing((current) => !current);
 
   return (
-    <div className="mt-6 border bg-neutral-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <h2 className="font-bold text-lg text-neutral-700">Company Socials</h2>
+    <div className="mt-6 rounded-md border bg-neutral-100 p-4">
+      <div className="flex items-center justify-between font-medium">
+        <h2 className="text-lg font-bold text-neutral-700">Company Socials</h2>
         <Button onClick={toogleEditing} variant={"ghost"}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="w-4 h-4 mr-2" />
+              <Pencil className="mr-2 h-4 w-4" />
               Edit
             </>
           )}
@@ -107,20 +108,20 @@ export default function CompanySocials({
       {/* display the title when not editing */}
       {!isEditing && (
         <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-3 ">
+          <div className="col-span-3">
             {initialData.mail && (
-              <div className="text-sm text-neutral-500 flex items-center gap-x-2 py-2 truncate">
-                <MailIcon className="w-4 h-4" />
+              <div className="flex items-center gap-x-2 truncate py-2 text-sm text-neutral-500">
+                <MailIcon className="h-4 w-4" />
                 {initialData.mail}
               </div>
             )}
             {initialData.website && (
               <Link
                 href={initialData.website}
-                className="text-sm text-neutral-500 flex items-center gap-x-2 py-2 truncate group"
+                className="group flex items-center gap-x-2 truncate py-2 text-sm text-neutral-500"
               >
-                <Globe className="w-4 h-4" />
-                <span className="group-hover:underline group-hover:text-primary">
+                <Globe className="h-4 w-4" />
+                <span className="group-hover:text-primary group-hover:underline">
                   {initialData.website}
                 </span>
               </Link>
@@ -128,10 +129,10 @@ export default function CompanySocials({
             {initialData.linkedin && (
               <Link
                 href={initialData.linkedin}
-                className="text-sm text-neutral-500 flex items-center gap-x-2 py-2 truncate group"
+                className="group flex items-center gap-x-2 truncate py-2 text-sm text-neutral-500"
               >
-                <Linkedin className="w-4 h-4" />
-                <span className="group-hover:underline group-hover:text-primary">
+                <Linkedin className="h-4 w-4" />
+                <span className="group-hover:text-primary group-hover:underline">
                   {initialData.linkedin}
                 </span>
               </Link>
@@ -139,8 +140,8 @@ export default function CompanySocials({
           </div>
           <div className="col-span-3">
             {initialData.address_line_1 && (
-              <div className="flex items-start gap-2 justify-start ">
-                <MapPin className="w-4 h-4" />
+              <div className="flex items-start justify-start gap-2">
+                <MapPin className="h-4 w-4" />
                 <div>
                   <p className="text-sm text-muted-foreground">
                     {initialData.address_line_1}, {initialData.address_line_2},
@@ -161,7 +162,7 @@ export default function CompanySocials({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="mt-4 space-y-4"
           >
             <FormField
               control={form.control}
