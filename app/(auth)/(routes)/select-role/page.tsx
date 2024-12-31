@@ -7,7 +7,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export default function page() {
+export default function Page() {
   const [role, setRole] = useState("");
   const router = useRouter();
 

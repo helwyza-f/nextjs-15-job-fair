@@ -1,6 +1,6 @@
 # Job Fair Application
 
-Ini adalah aplikasi Job Fair yang dibangun menggunakan Next.js dan Supabase. Aplikasi ini memungkinkan pengguna untuk mencari, melamar, dan mengelola pekerjaan.
+Ini adalah aplikasi Job Fair yang dibangun menggunakan Next.js dan Supabase. Aplikasi ini memungkinkan pengguna untuk mencari, melamar, dan mengelola pekerjaan dengan mudah. Dengan antarmuka yang intuitif dan fitur yang lengkap, aplikasi ini dirancang untuk membantu pencari kerja dan perusahaan dalam menemukan kecocokan yang tepat.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ Sebelum menjalankan aplikasi, pastikan Anda telah menginstal:
    yarn install
    ```
 
-   note: pastikan untuk menambahkan flag --legacy-peer-deps atau --forces jika menggunakan npm
+   **Catatan:** Pastikan untuk menambahkan flag `--legacy-peer-deps` atau `--force` jika menggunakan npm.
 
 3. **Buat file `.env` di root direktori proyek dan tambahkan variabel lingkungan:**
 
@@ -57,12 +57,13 @@ Sebelum menjalankan aplikasi, pastikan Anda telah menginstal:
 
    Akses aplikasi di [http://localhost:3000](http://localhost:3000).
 
-## Fitur
+## Fitur Utama
 
-- Pencarian pekerjaan
-- Melamar pekerjaan
-- Mengelola resume
-- Mengelola perusahaan
+- **Pencarian Pekerjaan**: Pengguna dapat mencari pekerjaan berdasarkan kriteria tertentu.
+- **Melamar Pekerjaan**: Pengguna dapat melamar pekerjaan dengan mengunggah resume dan informasi yang diperlukan.
+- **Mengelola Resume**: Pengguna dapat mengelola dan memperbarui resume mereka dengan mudah.
+- **Mengelola Perusahaan**: Perusahaan dapat mengelola lowongan pekerjaan dan melihat aplikasi yang masuk.
+- **Notifikasi**: Pengguna menerima notifikasi tentang status aplikasi mereka.
 
 ## Kontribusi
 
