@@ -44,7 +44,7 @@ export default function AppliedFilters({ categories }: CategoriesListProps) {
 
   // Mengonversi searchParams ke array
   const paramsArray = [...searchParams.entries()];
-  console.log("paramsArray", paramsArray);
+  // console.log("paramsArray", paramsArray);
 
   const title = paramsArray
     .filter((param) => param[0] === "title")

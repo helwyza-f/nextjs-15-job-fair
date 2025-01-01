@@ -24,10 +24,15 @@ export default function CompanyDetailsContent({
   jobs,
 }: CompanyDetailsContentProps) {
   const isFollower = userId && company.followers.includes(userId);
+  const isOwner = userId && company.userId === userId;
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleClickFollower = async () => {
+    if (isOwner) {
+      toast.error("You are the owner of this company");
+      return;
+    }
     try {
       setIsLoading(true);
       if (isFollower) {

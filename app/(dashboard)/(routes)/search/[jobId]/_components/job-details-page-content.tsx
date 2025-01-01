@@ -28,7 +28,7 @@ export default function JobDetailsPageContent({
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-
+  const isRecruiter = profile?.role === "recruiter";
   const onApply = async () => {
     setIsLoading(true);
     try {
@@ -116,27 +116,34 @@ export default function JobDetailsPageContent({
         </div>
         {/* action button */}
         <div>
-          {profile?.fullName &&
-          profile.contact &&
-          profile.email &&
-          profile.activeResume ? (
+          {isRecruiter ? (
+            <Button
+              className="border-purple-500 px-8 text-sm text-purple-700 hover:bg-purple-900 hover:text-white hover:shadow-sm"
+              variant={"outline"}
+              onClick={() => toast.success("You are a recruiter")}
+            >
+              Recruiter
+            </Button>
+          ) : profile?.fullName &&
+            profile?.contact &&
+            profile?.email &&
+            profile?.activeResume ? (
             <>
-              {!profile.appliedJobs.some(
+              {profile.appliedJobs.some(
                 (appliedJob) => appliedJob.jobId === jobId,
               ) ? (
-                <Button
-                  className="bg-purple-700 px-8 text-sm hover:bg-purple-900 hover:shadow-sm"
-                  onClick={() => setIsOpen(true)}
-                  disabled={profile.role === "recruiter"}
-                >
-                  Apply
-                </Button>
-              ) : (
                 <Button
                   className="border-purple-500 px-8 text-sm text-purple-700 hover:bg-purple-900 hover:text-white hover:shadow-sm"
                   variant={"outline"}
                 >
                   Applied
+                </Button>
+              ) : (
+                <Button
+                  className="bg-purple-700 px-8 text-sm hover:bg-purple-900 hover:shadow-sm"
+                  onClick={() => setIsOpen(true)}
+                >
+                  Apply
                 </Button>
               )}
             </>

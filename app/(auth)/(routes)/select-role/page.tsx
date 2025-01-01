@@ -14,11 +14,13 @@ export default function Page() {
   useEffect(() => {
     const fetchUserRole = async () => {
       const response = await axios.get("/api/get-user-role");
-      if (response.data.role !== "" || response.data.role !== null) {
+      if (
+        (response.data && response.data === "recruiter") ||
+        response.data === "job-seeker"
+      ) {
         toast.error("You have already selected a role");
         router.push("/");
       }
-      setRole(response.data);
     };
     fetchUserRole();
   }, []);
@@ -30,19 +32,46 @@ export default function Page() {
     toast.success("Role selected");
     router.push("/");
   };
+
   const handleSubmit = () => {
     if (!role) return;
     onSubmit(role);
   };
+
   return (
-    <Box className="flex h-screen flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold">Select your role first</h1>
+    <Box className="flex h-screen flex-col items-center justify-center bg-gradient-to-r from-purple-500 to-blue-500">
+      <h1 className="mb-6 text-3xl font-bold text-white">Select Your Role</h1>
+      <p className="mb-4 text-lg text-white">
+        Please choose one of the following roles:
+      </p>
       <div className="mt-4 flex flex-col gap-4">
         <div className="flex gap-4">
-          <Button onClick={() => setRole("recruiter")}>Recruiter</Button>
-          <Button onClick={() => setRole("job-seeker")}>Job Seeker</Button>
+          <Button
+            onClick={() => setRole("recruiter")}
+            className={`transform transition duration-300 ease-in-out ${
+              role === "recruiter"
+                ? "bg-white text-purple-600"
+                : "bg-purple-600 text-white"
+            } hover:bg-white hover:text-purple-600`}
+          >
+            Recruiter
+          </Button>
+          <Button
+            onClick={() => setRole("job-seeker")}
+            className={`transform transition duration-300 ease-in-out ${
+              role === "job-seeker"
+                ? "bg-white text-purple-600"
+                : "bg-purple-600 text-white"
+            } hover:bg-white hover:text-purple-600`}
+          >
+            Job Seeker
+          </Button>
         </div>
-        <Button disabled={!role} onClick={handleSubmit}>
+        <Button
+          disabled={!role}
+          onClick={handleSubmit}
+          className="bg-indigo-600 text-white transition duration-300 hover:bg-indigo-800"
+        >
           Submit
         </Button>
       </div>

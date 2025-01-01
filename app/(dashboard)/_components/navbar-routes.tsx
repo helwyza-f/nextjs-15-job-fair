@@ -9,6 +9,7 @@ import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function NavbarRoutes() {
   const pathname = usePathname();
@@ -65,9 +66,9 @@ export default function NavbarRoutes() {
           </>
         ) : (
           <Button
+            onClick={() => toast.success("Hello job seeker")}
+            className="border-purple-500 px-8 text-sm text-purple-700 hover:bg-purple-900 hover:text-white hover:shadow-sm"
             variant={"outline"}
-            size={"sm"}
-            className="cursor-not-allowed border-purple-700/70 hover:bg-purple-900/70 hover:text-white"
           >
             Job Seeker
           </Button>

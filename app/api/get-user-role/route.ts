@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     },
   });
   if (!user) {
-    return new NextResponse("User not found", { status: 404 });
+    return new NextResponse("User not found", { status: 200 });
   }
   return NextResponse.json(user.role);
 }

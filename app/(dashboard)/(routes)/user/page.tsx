@@ -16,7 +16,7 @@ import React from "react";
 import { truncate } from "lodash";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, PlusIcon } from "lucide-react";
+import { EyeIcon, PlusIcon, Settings, Settings2 } from "lucide-react";
 import axios from "axios";
 
 async function UserProfile() {
@@ -92,20 +92,20 @@ async function UserProfile() {
               <Button
                 variant={"outline"}
                 size={"sm"}
-                className="border-purple-700/70"
+                className="border-purple-700/70 hover:bg-purple-900 hover:text-white hover:shadow-sm"
               >
-                <PlusIcon className="h-4 w-4" />
-                Post Job
+                <Settings className="h-4 w-4" />
+                Manage Jobs
               </Button>
             </Link>
             <Link href={"/admin/companies"}>
               <Button
                 variant={"outline"}
                 size={"sm"}
-                className="border-purple-700/70"
+                className="border-purple-700/70 hover:bg-purple-900 hover:text-white hover:shadow-sm"
               >
-                <PlusIcon className="h-4 w-4" />
-                Create Company
+                <Settings2 className="h-4 w-4" />
+                Manage Companies
               </Button>
             </Link>
           </div>

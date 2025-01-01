@@ -60,57 +60,62 @@ export default function NameForm({ initialData, userId }: NameFormProps) {
   const toogleEditing = () => setIsEditing((current) => !current);
 
   return (
-    <Box>
-      {!isEditing && (
-        <div
-          className={cn(
-            "text-md mt-2 flex items-center gap-2 font-medium",
-            !initialData?.fullName && "italic text-neutral-500",
-          )}
-        >
-          <UserCircleIcon className="mr-2 h-6 w-6" />
-          {!initialData?.fullName && (
-            <Banner
-              variant={"warning"}
-              label="You may wanna set your Profile first"
-            />
-          )}
-          {initialData?.fullName || "No name"}
+    <>
+      {!initialData?.fullName && (
+        <div className="mb-4 flex w-full items-center justify-center">
+          <Banner
+            variant={"warning"}
+            label="You may wanna set your Profile first"
+          />
         </div>
       )}
-      {isEditing && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-1 items-center gap-2"
+      <Box>
+        {!isEditing && (
+          <div
+            className={cn(
+              "text-md mt-2 flex items-center gap-2 font-medium",
+              !initialData?.fullName && "italic text-neutral-500",
+            )}
           >
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isSubmitting}
-                      placeholder="e.g. Helwiza Fahry"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
-      )}
-      <Button onClick={toogleEditing} variant={"ghost"}>
-        {isEditing ? "Cancel" : "Edit"}
-      </Button>
-    </Box>
+            <UserCircleIcon className="mr-2 h-6 w-6" />
+
+            {initialData?.fullName || "No name"}
+          </div>
+        )}
+        {isEditing && (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-1 items-center gap-2"
+            >
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isSubmitting}
+                        placeholder="e.g. Helwiza Fahry"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex items-center gap-x-2">
+                <Button disabled={!isValid || isSubmitting} type="submit">
+                  Save
+                </Button>
+              </div>
+            </form>
+          </Form>
+        )}
+        <Button onClick={toogleEditing} variant={"ghost"}>
+          {isEditing ? "Cancel" : "Edit"}
+        </Button>
+      </Box>
+    </>
   );
 }
