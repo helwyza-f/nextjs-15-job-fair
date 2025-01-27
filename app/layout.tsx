@@ -28,6 +28,21 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <meta charSet="UTF-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <meta name="description" content="Online Job Fair Platform" />
+          <meta
+            name="keywords"
+            content="job fair, online job, recruitment, job seekers, employers, helwiza fahry, helwiza, helwyza"
+          />
+          <meta name="author" content="Helwiza Fahry" />
+          <link rel="canonical" href="https://job-fair.helwiza.com" />
+          <title>Job Fair - Online Job Fair Platform</title>
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

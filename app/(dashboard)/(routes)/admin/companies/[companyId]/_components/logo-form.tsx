@@ -83,7 +83,7 @@ export default function LogoForm({ initialData, companyId }: LogoFormProps) {
             <Image
               alt="cover image"
               fill
-              className="h-full w-full rounded-md object-cover"
+              className="h-full w-full rounded-md object-contain"
               src={initialData.logoUrl}
               sizes="100%"
             />

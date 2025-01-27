@@ -88,7 +88,7 @@ export default function CompanyCoverForm({
             <Image
               alt="cover image"
               fill
-              className="h-full w-full rounded-md object-contain"
+              className="h-full w-full rounded-md object-cover"
               src={initialData.coverImageUrl}
               sizes="100%"
             />

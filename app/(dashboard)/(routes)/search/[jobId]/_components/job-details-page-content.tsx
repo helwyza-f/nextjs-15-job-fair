@@ -97,7 +97,7 @@ export default function JobDetailsPageContent({
       <Box className="mt-4">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-gray-700">{job.title}</h1>
-          <Link href={`/company/${job.company?.id}`}>
+          <Link href={`/companies/${job.company?.id}`}>
             <div className="mt-2 flex items-center gap-2">
               {job.company?.logoUrl && (
                 <Image
